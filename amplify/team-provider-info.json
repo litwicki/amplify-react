@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "litwicki-amplify-dev-20191021144704-authRole",
+            "UnauthRoleArn": "arn:aws:iam::449355131337:role/litwicki-amplify-dev-20191021144704-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::449355131337:role/litwicki-amplify-dev-20191021144704-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "litwicki-amplify-dev-20191021144704-deployment",
+            "UnauthRoleName": "litwicki-amplify-dev-20191021144704-unauthRole",
+            "StackName": "litwicki-amplify-dev-20191021144704",
+            "StackId": "arn:aws:cloudformation:us-west-2:449355131337:stack/litwicki-amplify-dev-20191021144704/52abe680-f44c-11e9-82c7-0a977a718284"
+        }
+    }
+}
