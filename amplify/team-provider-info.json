@@ -9,6 +9,20 @@
             "UnauthRoleName": "litwicki-amplify-dev-20191021144704-unauthRole",
             "StackName": "litwicki-amplify-dev-20191021144704",
             "StackId": "arn:aws:cloudformation:us-west-2:449355131337:stack/litwicki-amplify-dev-20191021144704/52abe680-f44c-11e9-82c7-0a977a718284"
+        },
+        "categories": {
+            "function": {
+                "litwickiPreSignup": {
+                    "DOMAINWHITELIST": "'ammissio.io, jakelitwicki.com'",
+                    "DOMAINBLACKLIST": ""
+                }
+            },
+            "auth": {
+                "litwicki": {
+                    "googleClientId": "292410711291-4iksrurcvok3lfrqcbrcahhgsr8rfqch.apps.googleusercontent.com",
+                    "hostedUIProviderCreds": "[]"
+                }
+            }
         }
     }
 }

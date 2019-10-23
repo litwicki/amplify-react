@@ -34,6 +34,9 @@ import configureStore from './configureStore';
 import { translationMessages } from './i18n';
 
 import * as serviceWorker from './serviceWorker';
+import Amplify from 'aws-amplify'
+import config from './aws-exports'
+Amplify.configure(config)
 
 // Create redux store with history
 const initialState = {};
