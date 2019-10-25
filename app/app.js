@@ -16,6 +16,8 @@ import { ConnectedRouter } from 'connected-react-router';
 import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
 
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 // Import root app
 import App from 'containers/App';
 
@@ -38,6 +40,47 @@ import Amplify from 'aws-amplify'
 import config from './aws-exports'
 Amplify.configure(config)
 
+const theme = createMuiTheme({
+  palette: {
+    common: {
+      black: "#111111",
+      white: "#f9f9f9",
+    },
+    type: "light",
+    primary: {
+      light: "#ffc46D",
+      main: "#ffac31",
+      dark: "#ff9900",
+    },
+    secondary: {
+      light: "#55677d",
+      main: "#31465f",
+      dark: "#152939",
+    },
+    error: {
+      light: "#e57373",
+      main: "#f50057",
+      dark: "#303f9f",
+    },
+    grey: {
+      50: "#fafafa",
+      100: "#f5f5f5",
+      200: "#eeeeee",
+      300: "#e0e0e0",
+      400: "#bdbdbd",
+      500: "#9e9e9e",
+      600: "#757575",
+      700: "#616161",
+      800: "#424242",
+      900: "#212121",
+      A100: "#d5d5d5",
+      A200: "#aaaaaa",
+      A400: "#303030",
+      A700: "#616161"
+    }
+  },
+});
+
 // Create redux store with history
 const initialState = {};
 const store = configureStore(initialState, history);
@@ -48,7 +91,9 @@ const render = messages => {
     <Provider store={store}>
       <LanguageProvider messages={messages}>
         <ConnectedRouter history={history}>
-          <App />
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
         </ConnectedRouter>
       </LanguageProvider>
     </Provider>,
