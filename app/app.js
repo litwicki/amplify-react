@@ -30,54 +30,58 @@ import '!file-loader?name=[name].[ext]!./images/favicon.ico';
 import 'file-loader?name=.htaccess!./.htaccess';
 /* eslint-enable import/no-unresolved, import/extensions */
 
+import Amplify from 'aws-amplify';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
 import configureStore from './configureStore';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
 
 import * as serviceWorker from './serviceWorker';
-import Amplify from 'aws-amplify'
-import config from './aws-exports'
-Amplify.configure(config)
+import config from './aws-exports';
+
+Amplify.configure(config);
+library.add(fab);
 
 const theme = createMuiTheme({
   palette: {
     common: {
-      black: "#111111",
-      white: "#f9f9f9",
+      black: '#111111',
+      white: '#f9f9f9',
     },
-    type: "light",
+    type: 'light',
     primary: {
-      light: "#ffc46D",
-      main: "#ffac31",
-      dark: "#ff9900",
+      light: '#ffc46D',
+      main: '#ffac31',
+      dark: '#ff9900',
     },
     secondary: {
-      light: "#55677d",
-      main: "#31465f",
-      dark: "#152939",
+      light: '#55677d',
+      main: '#31465f',
+      dark: '#152939',
     },
     error: {
-      light: "#e57373",
-      main: "#f50057",
-      dark: "#303f9f",
+      light: '#e57373',
+      main: '#f50057',
+      dark: '#303f9f',
     },
     grey: {
-      50: "#fafafa",
-      100: "#f5f5f5",
-      200: "#eeeeee",
-      300: "#e0e0e0",
-      400: "#bdbdbd",
-      500: "#9e9e9e",
-      600: "#757575",
-      700: "#616161",
-      800: "#424242",
-      900: "#212121",
-      A100: "#d5d5d5",
-      A200: "#aaaaaa",
-      A400: "#303030",
-      A700: "#616161"
-    }
+      50: '#fafafa',
+      100: '#f5f5f5',
+      200: '#eeeeee',
+      300: '#e0e0e0',
+      400: '#bdbdbd',
+      500: '#9e9e9e',
+      600: '#757575',
+      700: '#616161',
+      800: '#424242',
+      900: '#212121',
+      A100: '#d5d5d5',
+      A200: '#aaaaaa',
+      A400: '#303030',
+      A700: '#616161',
+    },
   },
 });
 
