@@ -1,52 +1,26 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "litwicki-amplify-dev-20191021144704-authRole",
-      "UnauthRoleArn": "arn:aws:iam::449355131337:role/litwicki-amplify-dev-20191021144704-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::449355131337:role/litwicki-amplify-dev-20191021144704-authRole",
+      "AuthRoleName": "amplify-amplify-dev-141707-authRole",
+      "UnauthRoleArn": "arn:aws:iam::207996445507:role/amplify-amplify-dev-141707-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::207996445507:role/amplify-amplify-dev-141707-authRole",
       "Region": "us-west-2",
-      "DeploymentBucketName": "litwicki-amplify-dev-20191021144704-deployment",
-      "UnauthRoleName": "litwicki-amplify-dev-20191021144704-unauthRole",
-      "StackName": "litwicki-amplify-dev-20191021144704",
-      "StackId": "arn:aws:cloudformation:us-west-2:449355131337:stack/litwicki-amplify-dev-20191021144704/52abe680-f44c-11e9-82c7-0a977a718284"
+      "DeploymentBucketName": "amplify-amplify-dev-141707-deployment",
+      "UnauthRoleName": "amplify-amplify-dev-141707-unauthRole",
+      "StackName": "amplify-amplify-dev-141707",
+      "StackId": "arn:aws:cloudformation:us-west-2:207996445507:stack/amplify-amplify-dev-141707/cb3f50d0-fc23-11e9-bb20-064751363480"
     },
     "categories": {
       "function": {
-        "litwickiPreSignup": {
-          "DOMAINWHITELIST": "'ammissio.io, jakelitwicki.com'",
-          "DOMAINBLACKLIST": ""
+        "amplifyc72367ecCustomMessage": {
+          "REDIRECTURL": "http://localhost:3000/",
+          "EMAILSUBJECT": "Verify Amplify account email",
+          "EMAILMESSAGE": ""
         }
       },
       "auth": {
-        "litwicki": {
-          "googleClientId": "292410711291-4iksrurcvok3lfrqcbrcahhgsr8rfqch.apps.googleusercontent.com",
-          "hostedUIProviderCreds": "[]"
-        }
-      }
-    }
-  },
-  "home": {
-    "awscloudformation": {
-      "AuthRoleName": "litwicki-amplify-home-20191024224500-authRole",
-      "UnauthRoleArn": "arn:aws:iam::207996445507:role/litwicki-amplify-home-20191024224500-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::207996445507:role/litwicki-amplify-home-20191024224500-authRole",
-      "Region": "us-west-2",
-      "DeploymentBucketName": "litwicki-amplify-home-20191024224500-deployment",
-      "UnauthRoleName": "litwicki-amplify-home-20191024224500-unauthRole",
-      "StackName": "litwicki-amplify-home-20191024224500",
-      "StackId": "arn:aws:cloudformation:us-west-2:207996445507:stack/litwicki-amplify-home-20191024224500/93cb5fb0-f6ea-11e9-9233-069fde0f6b80"
-    },
-    "categories": {
-      "auth": {
-        "litwicki": {
-          "hostedUIProviderCreds": "[]",
-          "googleClientId": "292410711291-4iksrurcvok3lfrqcbrcahhgsr8rfqch.apps.googleusercontent.com"
-        }
-      },
-      "function": {
-        "litwickiPreSignup": {
-          "DOMAINWHITELIST": "'ammissio.io, jakelitwicki.com, gmail.com'",
-          "DOMAINBLACKLIST": ""
+        "amplifyc72367ec": {
+          "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"278702191093-b7h4fao3jarbkp642jbtjervn5e7dhe7.apps.googleusercontent.com\",\"client_secret\":\"aT_72SxFnqjCZyFvWcO01rco\"}]"
         }
       }
     }

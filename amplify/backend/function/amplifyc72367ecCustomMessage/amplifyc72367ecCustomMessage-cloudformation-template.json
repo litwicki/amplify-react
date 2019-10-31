@@ -2,11 +2,15 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Lambda resource stack creation using Amplify CLI",
   "Parameters": {
-    "DOMAINBLACKLIST": {
+    "REDIRECTURL": {
       "Type": "String",
       "Default": ""
     },
-    "DOMAINWHITELIST": {
+    "EMAILMESSAGE": {
+      "Type": "String",
+      "Default": ""
+    },
+    "EMAILSUBJECT": {
       "Type": "String",
       "Default": ""
     },
@@ -65,12 +69,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "litwickiPreSignup",
+            "amplifyc72367ecCustomMessage",
             {
               "Fn::Join": [
                 "",
                 [
-                  "litwickiPreSignup",
+                  "amplifyc72367ecCustomMessage",
                   "-",
                   {
                     "Ref": "env"
@@ -91,11 +95,17 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "DOMAINWHITELIST": {
-              "Ref": "DOMAINWHITELIST"
+            "REDIRECTURL": {
+              "Ref": "REDIRECTURL"
             },
-            "DOMAINBLACKLIST": {
-              "Ref": "DOMAINBLACKLIST"
+            "EMAILSUBJECT": {
+              "Ref": "EMAILSUBJECT"
+            },
+            "EMAILMESSAGE": {
+              "Ref": "EMAILMESSAGE"
+            },
+            "RESOURCENAME": {
+              "Ref": "resourceName"
             }
           }
         },
@@ -105,8 +115,8 @@
         "Runtime": "nodejs8.10",
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "litwicki-amplify-home-20191024224500-deployment",
-          "S3Key": "amplify-builds/litwickiPreSignup-33557a47616e58536744-build.zip"
+          "S3Bucket": "amplify-amplify-dev-141707-deployment",
+          "S3Key": "amplify-builds/amplifyc72367ecCustomMessage-4f783065336439696359-build.zip"
         }
       }
     },
@@ -116,12 +126,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "litwickiPreSignup",
+            "amplifyc72367ecCustomMessage",
             {
               "Fn::Join": [
                 "",
                 [
-                  "litwickiPreSignup",
+                  "amplifyc72367ecCustomMessage",
                   "-",
                   {
                     "Ref": "env"
