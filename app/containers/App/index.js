@@ -18,7 +18,17 @@ import {
  * MaterialUI
  */
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Button, Paper } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Paper,
+  Avatar,
+  Menu,
+  MenuItem,
+  Divider,
+} from '@material-ui/core';
 
 /**
  * Our stuff
@@ -52,11 +62,24 @@ const useStyles = makeStyles(theme => ({
       textDecoration: 'none',
     },
   },
+  userToolbar: {
+    textAlign: 'right',
+  },
+  menuAvatar: {},
 }));
 
 function App() {
   const [userState, dispatch] = useReducer(reducer, initialUserState);
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     // set listener for auth events
@@ -92,15 +115,38 @@ function App() {
             >
               Litwicki
             </Typography>
-            {!userState.user && !userState.loading && (
-              <Button variant="contained" component={Link} to="/auth/signin">
-                Sign In
-              </Button>
-            )}
-            {userState.user ||
-              (userState.loading && (
-                <Button onClick={signOut}>Sign Out</Button>
-              ))}
+            <div className={classes.userToolbar}>
+              {!userState.user && !userState.loading && (
+                <Button variant="contained" component={Link} to="/auth/signin">
+                  Sign In
+                </Button>
+              )}
+              {userState.user && (
+                <div>
+                  <Avatar
+                    aria-controls="simple-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    alt={userState.user.signInUserSession.idToken.given_name}
+                    src={
+                      userState.user.signInUserSession.idToken.payload.picture
+                    }
+                    className={classes.menuAvatar}
+                  />
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem>Profile</MenuItem>
+                    <Divider />
+                    <MenuItem onClick={signOut}>Sign Out</MenuItem>
+                  </Menu>
+                </div>
+              )}
+            </div>
           </Toolbar>
         </AppBar>
         <Paper className={classes.app}>

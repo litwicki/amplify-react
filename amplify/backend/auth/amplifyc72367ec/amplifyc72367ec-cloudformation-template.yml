@@ -113,12 +113,6 @@ Parameters:
   hostedUIProviderMeta:
     Type: String
               
-  hostedUIProviderCreds:
-    Type: String
-              
-  oAuthMetadata:
-    Type: String
-              
   verificationBucketName:
     Type: String
                     
@@ -130,7 +124,22 @@ Parameters:
               
   dependsOn:
     Type: CommaDelimitedList
-    
+      
+  hostedUIProviderCreds:
+    Type: String
+                
+  thirdPartyAuth:
+    Type: String
+                    
+  authProviders:
+    Type: CommaDelimitedList
+      
+  googleClientId:
+    Type: String
+              
+  oAuthMetadata:
+    Type: String
+            
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
 
@@ -270,6 +279,9 @@ Resources:
     Properties:
       ClientName: amplifc72367ec_app_clientWeb
       
+      ReadAttributes: !Ref userpoolClientReadAttributes
+      WriteAttributes: !Ref userpoolClientWriteAttributes
+      
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
     DependsOn: UserPool
@@ -279,6 +291,9 @@ Resources:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: amplifc72367ec_app_client
+      
+      ReadAttributes: !Ref userpoolClientReadAttributes
+      WriteAttributes: !Ref userpoolClientWriteAttributes
       
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
@@ -759,6 +774,13 @@ Resources:
             - cognito-idp.${region}.amazonaws.com/${client}
             - { region: !Ref "AWS::Region",  client: !Ref UserPool}
             
+      SupportedLoginProviders: 
+        
+        
+        accounts.google.com: !Ref googleClientId
+        
+        
+      
       AllowUnauthenticatedIdentities: !Ref allowUnauthenticatedIdentities
        
        
@@ -808,6 +830,9 @@ Outputs :
   AppClientSecret:
     Value: !GetAtt UserPoolClientInputs.appSecret
   
+  
+  GoogleWebClient:
+    Value: !Ref googleClientId
    
    
   

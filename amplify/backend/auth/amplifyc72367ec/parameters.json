@@ -17,9 +17,22 @@
   "userpoolClientGenerateSecret": true,
   "userpoolClientRefreshTokenValidity": 30,
   "userpoolClientWriteAttributes": ["email"],
-  "userpoolClientReadAttributes": ["email"],
+  "userpoolClientReadAttributes": [
+    "birthdate",
+    "email",
+    "family_name",
+    "gender",
+    "locale",
+    "given_name",
+    "name",
+    "nickname",
+    "preferred_username",
+    "picture",
+    "profile",
+    "zoneinfo"
+  ],
   "userpoolClientLambdaRole": "amplifc72367ec_userpoolclient_lambda_role",
-  "userpoolClientSetAttributes": false,
+  "userpoolClientSetAttributes": true,
   "resourceName": "amplifyc72367ec",
   "authSelections": "identityPoolAndUserPool",
   "authRoleArn": {
@@ -28,14 +41,13 @@
   "unauthRoleArn": {
     "Fn::GetAtt": ["UnauthRole", "Arn"]
   },
-  "useDefault": "defaultSocial",
+  "useDefault": "manual",
   "hostedUI": true,
   "usernameAttributes": ["email"],
   "triggers": "{\"CustomMessage\":[\"verification-link\"]}",
   "hostedUIDomainName": "amplifyc72367ec-c72367ec",
   "authProvidersUserPool": ["Google"],
   "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-  "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}",
   "verificationBucketName": "amplifyc72367ecverificationbucket",
   "parentStack": {
     "Ref": "AWS::StackId"
@@ -48,5 +60,8 @@
       "triggerProvider": "Cognito",
       "attributes": ["Arn", "Name"]
     }
-  ]
+  ],
+  "thirdPartyAuth": true,
+  "authProviders": ["accounts.google.com"],
+  "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"implicit\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\"],\"LogoutURLs\":[\"http://localhost:3000/\"]}"
 }

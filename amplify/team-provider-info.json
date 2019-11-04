@@ -13,13 +13,14 @@
     "categories": {
       "function": {
         "amplifyc72367ecCustomMessage": {
+          "EMAILMESSAGE": "",
           "REDIRECTURL": "http://localhost:3000/",
-          "EMAILSUBJECT": "Verify Amplify account email",
-          "EMAILMESSAGE": ""
+          "EMAILSUBJECT": "Verify Amplify account email"
         }
       },
       "auth": {
         "amplifyc72367ec": {
+          "googleClientId": "278702191093-b7h4fao3jarbkp642jbtjervn5e7dhe7.apps.googleusercontent.com",
           "hostedUIProviderCreds": "[{\"ProviderName\":\"Google\",\"client_id\":\"278702191093-b7h4fao3jarbkp642jbtjervn5e7dhe7.apps.googleusercontent.com\",\"client_secret\":\"aT_72SxFnqjCZyFvWcO01rco\"}]"
         }
       }
