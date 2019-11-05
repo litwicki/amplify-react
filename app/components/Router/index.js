@@ -135,7 +135,7 @@ const Routes = () => (
   <Switch>
     <Route exact path="/" component={HomePage} />
     <AnonRoute exact path="/auth" component={AuthPage} />
-    <AnonRoute exact path="/auth/signin" component={SignInPage} />
+    <Route exact path="/auth/signin" component={SignInPage} />
     <AnonRoute exact path="/auth/signup" component={SignUpPage} />
     <PrivateRoute path="/profile" component={ProfilePage} />
     <Route path="" component={NotFoundPage} />

@@ -12,6 +12,7 @@ import {
   withRouter,
   BrowserRouter,
   Link as RouterLink,
+  Redirect
 } from 'react-router-dom';
 
 /**
@@ -69,9 +70,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function App() {
+
   const [userState, dispatch] = useReducer(reducer, initialUserState);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [signOutSuccess, setSignOutSuccess] = useState(false);
+
+  function signOut() {
+    Auth.signOut()
+      .then(data => {
+        console.log('signed out: ', data);
+        setSignOutSuccess(true);
+      })
+      .catch(err => console.log(err));
+  }
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -101,6 +113,10 @@ function App() {
       checkUser(dispatch);
     }
   }, []);
+
+  if(signOutSuccess) {
+    return <Redirect to="/?signout=true" />
+  }
 
   return (
     <div className={classes.root}>
@@ -178,14 +194,6 @@ async function checkUser(dispatch) {
     console.log('err: ', err);
     dispatch({ type: 'loaded' });
   }
-}
-
-function signOut() {
-  Auth.signOut()
-    .then(data => {
-      console.log('signed out: ', data);
-    })
-    .catch(err => console.log(err));
 }
 
 export default withRouter(App);
