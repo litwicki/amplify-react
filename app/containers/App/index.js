@@ -6,7 +6,7 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  *
  */
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 
 import {
   withRouter,
@@ -71,7 +71,7 @@ const useStyles = makeStyles(theme => ({
 function App() {
   const [userState, dispatch] = useReducer(reducer, initialUserState);
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);

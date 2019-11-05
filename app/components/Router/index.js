@@ -76,13 +76,67 @@ class PrivateRoute extends React.Component {
 }
 
 PrivateRoute = withRouter(PrivateRoute);
+class AnonRoute extends React.Component {
+  state = {
+    loaded: false,
+    isAuthenticated: false,
+  };
+
+  componentDidMount() {
+    this.authenticate();
+    this.unlisten = this.props.history.listen(() => {
+      Auth.currentAuthenticatedUser()
+        .then(user => console.log('user: ', user))
+        .catch(() => {
+          if (this.state.isAuthenticated)
+            this.setState({ isAuthenticated: false });
+        });
+    });
+  }
+
+  componentWillUnmount() {
+    this.unlisten();
+  }
+
+  authenticate() {
+    Auth.currentAuthenticatedUser()
+      .then(() => {
+        this.setState({ loaded: true, isAuthenticated: true });
+      })
+      .catch(() => this.props.history.push('/auth'));
+  }
+
+  render() {
+    const { component: Component, ...rest } = this.props;
+    const { loaded, isAuthenticated } = this.state;
+    if (!loaded) return null;
+    return (
+      <Route
+        {...rest}
+        render={props =>
+          isAuthenticated ? (
+            <Redirect
+              to={{
+                pathname: '/',
+              }}
+            />
+          ) : (
+            <Component {...props} />
+          )
+        }
+      />
+    );
+  }
+}
+
+AnonRoute = withRouter(AnonRoute);
 
 const Routes = () => (
   <Switch>
     <Route exact path="/" component={HomePage} />
-    <Route exact path="/auth" component={AuthPage} />
-    <Route exact path="/auth/signin" component={SignInPage} />
-    <Route exact path="/auth/signup" component={SignUpPage} />
+    <AnonRoute exact path="/auth" component={AuthPage} />
+    <AnonRoute exact path="/auth/signin" component={SignInPage} />
+    <AnonRoute exact path="/auth/signup" component={SignUpPage} />
     <PrivateRoute path="/profile" component={ProfilePage} />
     <Route path="" component={NotFoundPage} />
   </Switch>

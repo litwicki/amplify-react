@@ -4,7 +4,8 @@
  *
  */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Redirect, Link } from 'react-router-dom';
 
 // import { FormattedMessage } from 'react-intl';
 // import messages from './messages';
@@ -13,7 +14,6 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { Auth } from 'aws-amplify';
 import { TextField } from 'formik-material-ui';
-import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -63,17 +63,23 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-async function signIn({ email, password }) {
-  try {
-    await Auth.signIn(email, password);
-    console.log('sign in success!');
-  } catch (err) {
-    console.log('error signing in..', err);
-  }
-}
-
 export default function SignInPage() {
   const classes = useStyles();
+  const [signInSuccess, setSignInSuccess] = useState(false);
+
+  if (signInSuccess) {
+    return <Redirect to="/" />;
+  }
+
+  async function signIn({ email, password }) {
+    try {
+      await Auth.signIn(email, password);
+      console.log('sign in success!');
+      setSignInSuccess(true);
+    } catch (err) {
+      console.log('error signing in..', err);
+    }
+  }
 
   return (
     <Box className={classes.formWrapper}>
@@ -81,7 +87,6 @@ export default function SignInPage() {
         initialValues={{
           email: '',
           password: '',
-          confirmPassword: '',
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
@@ -92,10 +97,6 @@ export default function SignInPage() {
             .required('Password is required'),
         })}
         onSubmit={fields => {
-          if (fields.password !== fields.confirmPassword) {
-            console.log('Password mismatch!');
-            return;
-          }
           signIn(fields);
         }}
         render={({ errors, touched }) => (
@@ -154,7 +155,7 @@ export default function SignInPage() {
                     color="primary"
                     type="submit"
                   >
-                    Register
+                    Sign In
                   </Button>
                   <Button className={classes.button} type="reset">
                     Clear
