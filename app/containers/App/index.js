@@ -71,10 +71,16 @@ const useStyles = makeStyles(theme => ({
 
 function App() {
 
+  if(signOutSuccess) {
+    return <Redirect to="/?signout=true" />
+  }
+
   const [userState, dispatch] = useReducer(reducer, initialUserState);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [signOutSuccess, setSignOutSuccess] = useState(false);
+
+  const hostname = 'http://localhost:3000/';
 
   function signOut() {
     Auth.signOut()
@@ -100,7 +106,7 @@ function App() {
       if (payload.event === 'signIn') {
         setImmediate(() => dispatch({ type: 'setUser', user: payload.data }));
         setImmediate(() =>
-          window.history.pushState({}, null, process.env('APP_HOSTNAME')),
+          window.history.pushState({}, null, hostname),
         );
       }
       // this listener is needed for form sign ups since the OAuth will redirect & reload
@@ -113,10 +119,6 @@ function App() {
       checkUser(dispatch);
     }
   }, []);
-
-  if(signOutSuccess) {
-    return <Redirect to="/?signout=true" />
-  }
 
   return (
     <div className={classes.root}>
@@ -156,7 +158,7 @@ function App() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
-                    <MenuItem>Profile</MenuItem>
+                    <MenuItem component={Link} to="/profile">Profile</MenuItem>
                     <Divider />
                     <MenuItem onClick={signOut}>Sign Out</MenuItem>
                   </Menu>
@@ -166,7 +168,7 @@ function App() {
           </Toolbar>
         </AppBar>
         <Paper className={classes.app}>
-          <Router />
+          <Router user={userState.user} />
           <GlobalStyle />
         </Paper>
       </BrowserRouter>
@@ -188,10 +190,9 @@ function reducer(state, action) {
 async function checkUser(dispatch) {
   try {
     const user = await Auth.currentAuthenticatedUser();
-    console.log('user: ', user);
     dispatch({ type: 'setUser', user });
   } catch (err) {
-    console.log('err: ', err);
+    console.log('checkUser error: ', err);
     dispatch({ type: 'loaded' });
   }
 }

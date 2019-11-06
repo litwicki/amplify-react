@@ -23,16 +23,18 @@ import AuthPage from '../../containers/AuthPage';
 import ProfilePage from '../../containers/ProfilePage';
 
 class PrivateRoute extends React.Component {
+
   state = {
     loaded: false,
     isAuthenticated: false,
+    user: null,
   };
 
   componentDidMount() {
     this.authenticate();
     this.unlisten = this.props.history.listen(() => {
       Auth.currentAuthenticatedUser()
-        .then(user => console.log('user: ', user))
+        .then(user => this.setState({ user: user }))
         .catch(() => {
           if (this.state.isAuthenticated)
             this.setState({ isAuthenticated: false });
@@ -76,6 +78,7 @@ class PrivateRoute extends React.Component {
 }
 
 PrivateRoute = withRouter(PrivateRoute);
+
 class AnonRoute extends React.Component {
   state = {
     loaded: false,
@@ -131,13 +134,16 @@ class AnonRoute extends React.Component {
 
 AnonRoute = withRouter(AnonRoute);
 
-const Routes = () => (
+const Routes = ({user}) => (
   <Switch>
     <Route exact path="/" component={HomePage} />
     <AnonRoute exact path="/auth" component={AuthPage} />
-    <Route exact path="/auth/signin" component={SignInPage} />
+    <AnonRoute exact path="/auth/signin" component={SignInPage} />
     <AnonRoute exact path="/auth/signup" component={SignUpPage} />
-    <PrivateRoute path="/profile" component={ProfilePage} />
+    <Route
+      exact path='/profile'
+      render={props => <ProfilePage user={user} />}
+    />
     <Route path="" component={NotFoundPage} />
   </Switch>
 );
