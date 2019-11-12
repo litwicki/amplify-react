@@ -47,11 +47,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ProfilePage = (user) => {
+const ProfilePage = (props) => {
 
   const classes = useStyles();
 
-  console.log(user);
+  console.log(props);
 
   const change = (name, e) => {
     e.persist();
@@ -91,8 +91,6 @@ const ProfilePage = (user) => {
                     variant="outlined"
                     name="given_name"
                     type="text"
-                    value="jimbo bilbo"
-                    onChange={change.bind(null, "given_name")}
                     className={`${classes.textField}form-control${
                       errors.given_name && touched.given_name ? ' is-invalid' : ''
                     }`}

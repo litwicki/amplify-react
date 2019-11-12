@@ -11,8 +11,7 @@ import React, { useReducer, useEffect, useState } from 'react';
 import {
   withRouter,
   BrowserRouter,
-  Link as RouterLink,
-  Redirect
+  Link as RouterLink
 } from 'react-router-dom';
 
 /**
@@ -69,16 +68,11 @@ const useStyles = makeStyles(theme => ({
   menuAvatar: {},
 }));
 
-function App() {
-
-  if(signOutSuccess) {
-    return <Redirect to="/?signout=true" />
-  }
+function App(props) {
 
   const [userState, dispatch] = useReducer(reducer, initialUserState);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [signOutSuccess, setSignOutSuccess] = useState(false);
 
   const hostname = 'http://localhost:3000/';
 
@@ -86,7 +80,7 @@ function App() {
     Auth.signOut()
       .then(data => {
         console.log('signed out: ', data);
-        setSignOutSuccess(true);
+        props.history.push('/');
       })
       .catch(err => console.log(err));
   }
@@ -191,6 +185,7 @@ async function checkUser(dispatch) {
   try {
     const user = await Auth.currentAuthenticatedUser();
     dispatch({ type: 'setUser', user });
+    console.log('App.user', user);
   } catch (err) {
     console.log('checkUser error: ', err);
     dispatch({ type: 'loaded' });

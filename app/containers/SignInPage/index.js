@@ -21,7 +21,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
  * MaterialUI
  */
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, FormControl, Button, Divider, Grid } from '@material-ui/core';
+import { Box, FormControl, Button, Divider, Grid, Hidden } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   formWrapper: {
@@ -54,28 +54,27 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRight: '1px solid #efefef',
+    'button': {
+      whiteSpace: 'nowrap'
+    }
+  },
+  btnText: {
+    marginLeft: theme.spacing(1)
   },
   amplifyLogin: {
     paddingLeft: theme.spacing(3),
-  },
-  icon: {
-    marginRight: theme.spacing(1),
-  },
+  }
 }));
 
-export default function SignInPage() {
-  const classes = useStyles();
-  const [signInSuccess, setSignInSuccess] = useState(false);
+export default function SignInPage(props) {
 
-  if (signInSuccess) {
-    return <Redirect to="/" />;
-  }
+  const classes = useStyles();
 
   async function signIn({ email, password }) {
     try {
       await Auth.signIn(email, password);
       console.log('sign in success!');
-      setSignInSuccess(true);
+      props.history.push('/');
     } catch (err) {
       console.log('error signing in..', err);
     }
@@ -99,7 +98,11 @@ export default function SignInPage() {
         onSubmit={fields => {
           signIn(fields);
         }}
-        render={({ errors, touched }) => (
+        >
+        {({
+          errors,
+          touched
+        }) => (
           <Grid container spacing={3}>
             <Grid item xs={2} className={classes.socialLogin}>
               <Button
@@ -110,7 +113,7 @@ export default function SignInPage() {
                   className={classes.icon}
                   icon={['fab', 'google']}
                 />
-                Login With Google
+                <Hidden smDown><div className={classes.btnText}>Login{ " " }With{ " " }Google</div></Hidden>
               </Button>
             </Grid>
             <Grid item xs={3}>
@@ -174,7 +177,7 @@ export default function SignInPage() {
             </Grid>
           </Grid>
         )}
-      />
+      </Formik>
     </Box>
   );
 }
