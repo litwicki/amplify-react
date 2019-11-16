@@ -85,7 +85,7 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
 
-  console.log(props);
+  console.log('container.App', props);
 
   useInjectReducer({ key: 'app', reducer });
   useInjectSaga({ key: 'app', saga });
@@ -199,7 +199,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  app: makeSelectApp(),
+  app: makeSelectApp()
 });
 
 function mapDispatchToProps(dispatch) {
