@@ -21,14 +21,14 @@ import SignUpPage from '../../containers/SignUpPage';
 import AuthPage from '../../containers/AuthPage';
 import ProfilePage from '../../containers/ProfilePage';
 
-function Router(props) {
+function Router() {
   return (
     <Switch>
       <PublicRoute exact path="/" component={HomePage} />
       <PublicRoute exact path="/auth" component={AuthPage} />
       <PublicRoute exact path="/auth/signin" component={SignInPage} />
       <PublicRoute exact path="/auth/signup" component={SignUpPage} />
-      <Route exact path='/profile' user={props} component={ProfilePage} />
+      <Route exact path='/profile' component={ProfilePage} />
       <PublicRoute path="" component={NotFoundPage} />
     </Switch>
   );

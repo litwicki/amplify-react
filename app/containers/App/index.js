@@ -8,6 +8,21 @@
  */
 import React, { useReducer, useEffect, useState } from 'react';
 
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Helmet } from 'react-helmet';
+import { FormattedMessage } from 'react-intl';
+import { createStructuredSelector } from 'reselect';
+import { compose } from 'redux';
+
+import { useInjectSaga } from 'utils/injectSaga';
+import { useInjectReducer } from 'utils/injectReducer';
+import makeSelectApp from './selectors';
+import reducer from './reducer';
+import saga from './saga';
+import messages from './messages';
+import { APP_HOSTNAME } from './constants';
+
 import {
   withRouter,
   BrowserRouter,
@@ -70,11 +85,14 @@ const useStyles = makeStyles(theme => ({
 
 function App(props) {
 
+  console.log(props);
+
+  useInjectReducer({ key: 'app', reducer });
+  useInjectSaga({ key: 'app', saga });
+
   const [userState, dispatch] = useReducer(reducer, initialUserState);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const hostname = 'http://localhost:3000/';
 
   function signOut() {
     Auth.signOut()
@@ -100,7 +118,7 @@ function App(props) {
       if (payload.event === 'signIn') {
         setImmediate(() => dispatch({ type: 'setUser', user: payload.data }));
         setImmediate(() =>
-          window.history.pushState({}, null, hostname),
+          window.history.pushState({}, null, APP_HOSTNAME),
         );
       }
       // this listener is needed for form sign ups since the OAuth will redirect & reload
@@ -115,6 +133,11 @@ function App(props) {
   }, []);
 
   return (
+    <>
+    <Helmet>
+      <title>Amplify</title>
+      <meta name="description" content="Description of App" />
+    </Helmet>
     <div className={classes.root}>
       <BrowserRouter>
         <AppBar position="static">
@@ -162,34 +185,42 @@ function App(props) {
           </Toolbar>
         </AppBar>
         <Paper className={classes.app}>
-          <Router user={userState.user} />
+          <Router />
           <GlobalStyle />
         </Paper>
       </BrowserRouter>
     </div>
+    </>
   );
 }
 
-function reducer(state, action) {
-  switch (action.type) {
-    case 'setUser':
-      return { ...state, user: action.user, loading: false };
-    case 'loaded':
-      return { ...state, loading: false };
-    default:
-      return state;
-  }
+App.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = createStructuredSelector({
+  app: makeSelectApp(),
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
 }
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 async function checkUser(dispatch) {
   try {
     const user = await Auth.currentAuthenticatedUser();
     dispatch({ type: 'setUser', user });
-    console.log('App.user', user);
   } catch (err) {
     console.log('checkUser error: ', err);
     dispatch({ type: 'loaded' });
   }
 }
 
-export default withRouter(App);
+export default compose(withConnect)(withRouter(App));
