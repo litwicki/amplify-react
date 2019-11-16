@@ -5,7 +5,7 @@ import { initialState } from './reducer';
  * Direct selector to the app state domain
  */
 
-const selectAppDomain = state => state.app || initialState;
+const userState = state => state.userState || initialState;
 
 /**
  * Other specific selectors
@@ -17,9 +17,9 @@ const selectAppDomain = state => state.app || initialState;
 
 const makeSelectApp = () =>
   createSelector(
-    selectAppDomain,
+    userState,
     substate => substate,
   );
 
 export default makeSelectApp;
-export { selectAppDomain };
+export { userState };

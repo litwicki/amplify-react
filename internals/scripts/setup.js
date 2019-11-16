@@ -97,9 +97,9 @@ function installPackages() {
 
 // destination.txt will be created or overwritten by default.
 function copyConfigFile() {
-  fs.copyFile('appconfig.js.dist', 'appconfig.js', (err) => {
+  fs.copyFile('app/constants.js.dist', 'app/constants.js', (err) => {
     if (err) throw err;
-    console.log('Please review `appconfig.js` and change values as needed.');
+    console.log('Please review `app/constants.js` and change values as needed.');
   });
 }
 
@@ -155,7 +155,7 @@ function reportError(error) {
   await installPackages().catch(reason => reportError(reason));
 
   try {
-    process.stdout.write("\nSetting up appconfig");
+    process.stdout.write("\nSetting up app constants");
     copyConfigFile();
   } catch (err) {
     reportError(err);

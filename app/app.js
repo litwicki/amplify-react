@@ -40,7 +40,6 @@ import { translationMessages } from './i18n';
 
 import * as serviceWorker from './serviceWorker';
 import config from './aws-exports';
-import appconfig from '../appconfig';
 
 Amplify.configure(config);
 library.add(fab);

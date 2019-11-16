@@ -19,7 +19,7 @@ const appReducer = (state = initialState, action) =>
       case DEFAULT_ACTION:
         break;
       default:
-        return state;
+        return { ...state, user: action.user, loading: false };
     }
   });
 

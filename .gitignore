@@ -20,4 +20,4 @@ dist/
 node_modules/
 aws-exports.js
 awsconfiguration.json
-appconfig.js
+app/constants.js

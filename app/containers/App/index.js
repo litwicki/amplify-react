@@ -17,21 +17,11 @@ import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectApp from './selectors';
-import reducer from './reducer';
-import saga from './saga';
-import messages from './messages';
-import { APP_HOSTNAME } from './constants';
-
 import {
   withRouter,
   BrowserRouter,
-  Link as RouterLink
+  Link as RouterLink,
 } from 'react-router-dom';
-
-/**
- * MaterialUI
- */
 import { makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -44,11 +34,20 @@ import {
   MenuItem,
   Divider,
 } from '@material-ui/core';
+import { Hub, Auth } from 'aws-amplify';
+import makeSelectApp from './selectors';
+import reducer from './reducer';
+import saga from './saga';
+import messages from './messages';
+import { APP_HOSTNAME } from './constants';
+
+/**
+ * MaterialUI
+ */
 
 /**
  * Our stuff
  */
-import { Hub, Auth } from 'aws-amplify';
 import GlobalStyle from '../../global-styles';
 import Router from '../../components/Router';
 
@@ -84,7 +83,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function App(props) {
-
   console.log('container.App', props);
 
   useInjectReducer({ key: 'app', reducer });
@@ -117,9 +115,7 @@ function App(props) {
       const { payload } = data;
       if (payload.event === 'signIn') {
         setImmediate(() => dispatch({ type: 'setUser', user: payload.data }));
-        setImmediate(() =>
-          window.history.pushState({}, null, APP_HOSTNAME),
-        );
+        setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
       }
       // this listener is needed for form sign ups since the OAuth will redirect & reload
       if (payload.event === 'signOut') {
@@ -134,62 +130,68 @@ function App(props) {
 
   return (
     <>
-    <Helmet>
-      <title>Amplify</title>
-      <meta name="description" content="Description of App" />
-    </Helmet>
-    <div className={classes.root}>
-      <BrowserRouter>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography
-              variant="h6"
-              component={Link}
-              to="/"
-              className={classes.title}
-            >
-              Litwicki
-            </Typography>
-            <div className={classes.userToolbar}>
-              {!userState.user && !userState.loading && (
-                <Button variant="contained" component={Link} to="/auth/signin">
-                  Sign In
-                </Button>
-              )}
-              {userState.user && (
-                <div>
-                  <Avatar
-                    aria-controls="simple-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                    alt={userState.user.signInUserSession.idToken.given_name}
-                    src={
-                      userState.user.signInUserSession.idToken.payload.picture
-                    }
-                    className={classes.menuAvatar}
-                  />
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
+      <Helmet>
+        <title>Amplify</title>
+        <meta name="description" content="Description of App" />
+      </Helmet>
+      <div className={classes.root}>
+        <BrowserRouter>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography
+                variant="h6"
+                component={Link}
+                to="/"
+                className={classes.title}
+              >
+                Litwicki
+              </Typography>
+              <div className={classes.userToolbar}>
+                {!userState.user && !userState.loading && (
+                  <Button
+                    variant="contained"
+                    component={Link}
+                    to="/auth/signin"
                   >
-                    <MenuItem component={Link} to="/profile">Profile</MenuItem>
-                    <Divider />
-                    <MenuItem onClick={signOut}>Sign Out</MenuItem>
-                  </Menu>
-                </div>
-              )}
-            </div>
-          </Toolbar>
-        </AppBar>
-        <Paper className={classes.app}>
-          <Router />
-          <GlobalStyle />
-        </Paper>
-      </BrowserRouter>
-    </div>
+                    Sign In
+                  </Button>
+                )}
+                {userState.user && (
+                  <div>
+                    <Avatar
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                      alt={userState.user.signInUserSession.idToken.given_name}
+                      src={
+                        userState.user.signInUserSession.idToken.payload.picture
+                      }
+                      className={classes.menuAvatar}
+                    />
+                    <Menu
+                      id="simple-menu"
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem component={Link} to="/profile">
+                        Profile
+                      </MenuItem>
+                      <Divider />
+                      <MenuItem onClick={signOut}>Sign Out</MenuItem>
+                    </Menu>
+                  </div>
+                )}
+              </div>
+            </Toolbar>
+          </AppBar>
+          <Paper className={classes.app}>
+            <Router />
+            <GlobalStyle />
+          </Paper>
+        </BrowserRouter>
+      </div>
     </>
   );
 }
@@ -199,7 +201,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  app: makeSelectApp()
+  user: makeSelectApp(),
 });
 
 function mapDispatchToProps(dispatch) {
