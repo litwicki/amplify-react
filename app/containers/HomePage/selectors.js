@@ -6,7 +6,6 @@ import { initialState } from './reducer';
  */
 
 const selectHomePageDomain = state => state.homePage || initialState;
-const user = state => state.user || initialState;
 
 /**
  * Other specific selectors
@@ -18,7 +17,6 @@ const user = state => state.user || initialState;
 
 const makeSelectHomePage = () =>
   createSelector(
-    user,
     selectHomePageDomain,
     substate => substate,
   );

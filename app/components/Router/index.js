@@ -11,25 +11,18 @@
 // import messages from './messages';
 
 import React from 'react';
-import { Switch, Route as PublicRoute } from 'react-router-dom';
-import { RestrictedRoute as Route } from '../RestrictedRoute';
+import { Switch, Route } from 'react-router-dom';
 
-import HomePage from '../../containers/HomePage/Loadable';
+import HomePage from '../../containers/HomePage';
 import NotFoundPage from '../../containers/NotFoundPage/Loadable';
-import SignInPage from '../../containers/SignInPage';
-import SignUpPage from '../../containers/SignUpPage';
-import AuthPage from '../../containers/AuthPage';
 import ProfilePage from '../../containers/ProfilePage';
 
 function Router() {
   return (
     <Switch>
-      <PublicRoute exact path="/" component={HomePage} />
-      <PublicRoute exact path="/auth" component={AuthPage} />
-      <PublicRoute exact path="/auth/signin" component={SignInPage} />
-      <PublicRoute exact path="/auth/signup" component={SignUpPage} />
-      <Route exact path='/profile' component={ProfilePage} />
-      <PublicRoute path="" component={NotFoundPage} />
+      <Route exact path="/" component={HomePage} />
+      <Route exact path="/profile" component={ProfilePage} />
+      <Route path="" component={NotFoundPage} />
     </Switch>
   );
 }

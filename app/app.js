@@ -14,7 +14,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import history from 'utils/history';
-import 'sanitize.css/sanitize.css';
 
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
@@ -40,7 +39,6 @@ import { translationMessages } from './i18n';
 
 import * as serviceWorker from './serviceWorker';
 import config from './aws-exports';
-
 Amplify.configure(config);
 library.add(fab);
 

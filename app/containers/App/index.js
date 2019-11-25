@@ -8,10 +8,9 @@
  */
 import React, { useReducer, useEffect, useState } from 'react';
 
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
@@ -23,6 +22,7 @@ import {
   Link as RouterLink,
 } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+
 import {
   AppBar,
   Toolbar,
@@ -33,13 +33,14 @@ import {
   Menu,
   MenuItem,
   Divider,
+  Container,
 } from '@material-ui/core';
 import { Hub, Auth } from 'aws-amplify';
 import makeSelectApp from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import messages from './messages';
-import { APP_HOSTNAME } from './constants';
+// import { FormattedMessage } from 'react-intl';
+// import messages from './messages';
 
 /**
  * MaterialUI
@@ -50,6 +51,9 @@ import { APP_HOSTNAME } from './constants';
  */
 import GlobalStyle from '../../global-styles';
 import Router from '../../components/Router';
+import SignIn from '../../components/SignIn';
+import SignUp from '../../components/SignUp';
+import { APP_HOSTNAME } from './constants';
 
 const Link = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
@@ -79,11 +83,25 @@ const useStyles = makeStyles(theme => ({
   userToolbar: {
     textAlign: 'right',
   },
-  menuAvatar: {},
+  authFormWrapper: {
+    maxWidth: 600,
+    marginTop: 200,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    padding: theme.spacing(2),
+  },
 }));
 
 function App(props) {
   console.log('container.App', props);
+
+  function signOut() {
+    Auth.signOut()
+      .then(data => {
+        console.log('App.signOut', data);
+      })
+      .catch(err => console.log('App.signOut.error', err));
+  }
 
   useInjectReducer({ key: 'app', reducer });
   useInjectSaga({ key: 'app', saga });
@@ -91,15 +109,7 @@ function App(props) {
   const [userState, dispatch] = useReducer(reducer, initialUserState);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-
-  function signOut() {
-    Auth.signOut()
-      .then(data => {
-        console.log('signed out: ', data);
-        props.history.push('/');
-      })
-      .catch(err => console.log(err));
-  }
+  const [authFormType, setAuthFormType] = useState('signIn');
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -109,17 +119,31 @@ function App(props) {
     setAnchorEl(null);
   };
 
+  function toggleForm() {
+    if (authFormType === 'signIn') {
+      setAuthFormType('signUp');
+    } else {
+      setAuthFormType('signIn');
+    }
+  }
+
   useEffect(() => {
     // set listener for auth events
     Hub.listen('auth', data => {
       const { payload } = data;
-      if (payload.event === 'signIn') {
-        setImmediate(() => dispatch({ type: 'setUser', user: payload.data }));
-        setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
-      }
-      // this listener is needed for form sign ups since the OAuth will redirect & reload
-      if (payload.event === 'signOut') {
-        setTimeout(() => dispatch({ type: 'setUser', user: null }), 350);
+
+      switch (payload.event) {
+        case 'signIn':
+          console.log('Hub.listen.auth.signIn', payload);
+          setImmediate(() => dispatch({ type: 'setUser', user: payload.data }));
+          setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
+          break;
+        case 'signOut':
+          console.log('Hub.listen.auth.signOut', payload);
+          window.location.href = '/';
+          break;
+        default:
+          break;
       }
     });
     // we check for the current user unless there is a redirect to ?signedIn=true
@@ -130,75 +154,101 @@ function App(props) {
 
   return (
     <>
-      <Helmet>
-        <title>Amplify</title>
-        <meta name="description" content="Description of App" />
-      </Helmet>
+      <GlobalStyle />
       <div className={classes.root}>
-        <BrowserRouter>
-          <AppBar position="static">
-            <Toolbar>
-              <Typography
-                variant="h6"
-                component={Link}
-                to="/"
-                className={classes.title}
-              >
-                Litwicki
-              </Typography>
-              <div className={classes.userToolbar}>
-                {!userState.user && !userState.loading && (
-                  <Button
-                    variant="contained"
-                    component={Link}
-                    to="/auth/signin"
-                  >
-                    Sign In
-                  </Button>
-                )}
-                {userState.user && (
-                  <div>
-                    <Avatar
-                      aria-controls="simple-menu"
-                      aria-haspopup="true"
-                      onClick={handleClick}
-                      alt={userState.user.signInUserSession.idToken.given_name}
-                      src={
-                        userState.user.signInUserSession.idToken.payload.picture
-                      }
-                      className={classes.menuAvatar}
-                    />
-                    <Menu
-                      id="simple-menu"
-                      anchorEl={anchorEl}
-                      keepMounted
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}
+        {!userState.user && !userState.loading && (
+          <Container>
+            <Helmet>
+              <title>Amplify | Sign In</title>
+              <meta name="description" content="Amplify Web App" />
+            </Helmet>
+            <Paper className={classes.authFormWrapper}>
+              {authFormType === 'signIn' && (
+                <>
+                  <SignIn props={props} />
+                  <Divider />
+                  <p>
+                    Need an account?{' '}
+                    <Button onClick={toggleForm}>Sign Up</Button>
+                  </p>
+                </>
+              )}
+              {authFormType === 'signUp' && (
+                <>
+                  <SignUp props={props} />
+                  <Divider />
+                  <p>
+                    Have an account?{' '}
+                    <Button onClick={toggleForm}>Sign In</Button>
+                  </p>
+                </>
+              )}
+            </Paper>
+          </Container>
+        )}
+        {userState.user && !userState.loading && (
+          <>
+            <Helmet>
+              <title>Amplify</title>
+              <meta name="description" content="Amplify Web App" />
+            </Helmet>
+            <>
+              <BrowserRouter>
+                <AppBar position="static">
+                  <Toolbar>
+                    <Typography
+                      variant="h6"
+                      component={Link}
+                      to="/"
+                      className={classes.title}
                     >
-                      <MenuItem component={Link} to="/profile">
-                        Profile
-                      </MenuItem>
-                      <Divider />
-                      <MenuItem onClick={signOut}>Sign Out</MenuItem>
-                    </Menu>
-                  </div>
-                )}
-              </div>
-            </Toolbar>
-          </AppBar>
-          <Paper className={classes.app}>
-            <Router />
-            <GlobalStyle />
-          </Paper>
-        </BrowserRouter>
+                      Litwicki
+                    </Typography>
+                    <div className={classes.userToolbar}>
+                      <Avatar
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                        alt={
+                          userState.user.signInUserSession.idToken.given_name
+                        }
+                        src={
+                          userState.user.signInUserSession.idToken.payload
+                            .picture
+                        }
+                        className={classes.menuAvatar}
+                      />
+                      <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                      >
+                        <MenuItem component={Link} to="/profile">
+                          Profile
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onClick={signOut}>Sign Out</MenuItem>
+                      </Menu>
+                    </div>
+                  </Toolbar>
+                </AppBar>
+                <Paper className={classes.app}>
+                  <Router />
+                </Paper>
+              </BrowserRouter>
+            </>
+          </>
+        )}
       </div>
     </>
   );
 }
 
-App.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-};
+// App.propTypes = {
+//   dispatch: PropTypes.func.isRequired,
+// };
 
 const mapStateToProps = createStructuredSelector({
   user: makeSelectApp(),

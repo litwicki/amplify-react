@@ -1,6 +1,6 @@
 /**
  *
- * SignUpPage
+ * SignIn
  *
  */
 
@@ -8,22 +8,23 @@ import React from 'react';
 
 // import { FormattedMessage } from 'react-intl';
 // import messages from './messages';
+
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { Auth } from 'aws-amplify';
 import { TextField } from 'formik-material-ui';
-import { Link } from 'react-router-dom';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 /**
  * MaterialUI
  */
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, FormControl, Button, Divider } from '@material-ui/core';
+import { Box, FormControl, Button, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   formWrapper: {
-    flexGrow: 1,
-    width: '300px',
+    padding: theme.spacing(2),
   },
   textField: {
     marginTop: theme.spacing(2),
@@ -41,25 +42,33 @@ const useStyles = makeStyles(theme => ({
   button: {
     marginRight: theme.spacing(2),
   },
-  signinLink: {
+  signupLink: {
     color: theme.palette.primary.main,
   },
   buttonWrapper: {
     marginTop: theme.spacing(4),
   },
+  googleLogin: {
+    marginBottom: theme.spacing(2),
+  },
+  btnText: {
+    marginLeft: theme.spacing(1),
+  },
 }));
 
-async function signUp({ email, password }) {
-  try {
-    await Auth.signUp(email, password);
-    console.log('sign up success!');
-  } catch (err) {
-    console.log('error signing up..', err);
-  }
-}
+export default function SignIn(props) {
+  console.log(props);
 
-export default function SignUpPage() {
   const classes = useStyles();
+
+  async function signIn({ email, password }) {
+    try {
+      await Auth.signIn(email, password);
+      console.log('sign in success!');
+    } catch (err) {
+      console.log('error signing in..', err);
+    }
+  }
 
   return (
     <Box className={classes.formWrapper}>
@@ -67,7 +76,6 @@ export default function SignUpPage() {
         initialValues={{
           email: '',
           password: '',
-          confirmPassword: '',
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
@@ -76,18 +84,12 @@ export default function SignUpPage() {
           password: Yup.string()
             .min(6, 'Password must be at least 6 characters')
             .required('Password is required'),
-          confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'Passwords must match')
-            .required('Confirm Password is required'),
         })}
         onSubmit={fields => {
-          if (fields.password !== fields.confirmPassword) {
-            console.log('Password mismatch!');
-            return;
-          }
-          signUp(fields);
+          signIn(fields);
         }}
-        render={({ errors, touched }) => (
+      >
+        {({ errors, touched }) => (
           <Form>
             <FormControl
               fullWidth
@@ -121,50 +123,38 @@ export default function SignUpPage() {
                 }`}
               />
             </FormControl>
-            <FormControl
-              fullWidth
-              variant="filled"
-              className={classes.formControl}
-            >
-              <Field
-                component={TextField}
-                label="Confirm Password"
-                variant="outlined"
-                name="confirmPassword"
-                type="password"
-                className={`${classes.textField}form-control${
-                  errors.confirmPassword && touched.confirmPassword
-                    ? ' is-invalid'
-                    : ''
-                }`}
-              />
-            </FormControl>
 
-            <Box className={classes.buttonWrapper}>
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Register
-              </Button>
-              <Button className={classes.button} type="reset">
-                Clear
-              </Button>
-            </Box>
-
-            <Divider className={classes.divider} />
-
-            <p>
-              Already have an account?{' '}
-              <Link className={classes.signinLink} to="/auth/signin">
-                Sign In
-              </Link>
-            </p>
+            <Grid container size={12} className={classes.buttonWrapper}>
+              <Grid item xs={7}>
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
+                  Sign In
+                </Button>
+                <Button className={classes.button} type="reset">
+                  Clear
+                </Button>
+              </Grid>
+              <Grid item xs={5}>
+                <Button
+                  className={classes.googleLogin}
+                  onClick={() => Auth.federatedSignIn({ provider: 'Google' })}
+                  variant="outlined"
+                >
+                  <FontAwesomeIcon
+                    className={classes.icon}
+                    icon={['fab', 'google']}
+                  />
+                  <div className={classes.btnText}>Login With Google</div>
+                </Button>
+              </Grid>
+            </Grid>
           </Form>
         )}
-      />
+      </Formik>
     </Box>
   );
 }
