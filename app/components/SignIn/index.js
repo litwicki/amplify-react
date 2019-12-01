@@ -24,7 +24,7 @@ import { Box, FormControl, Button, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   formWrapper: {
-    padding: theme.spacing(2),
+   
   },
   textField: {
     marginTop: theme.spacing(2),
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.main,
   },
   buttonWrapper: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(2),
   },
   googleLogin: {
     marginBottom: theme.spacing(2),

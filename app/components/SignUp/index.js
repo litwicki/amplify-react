@@ -4,7 +4,7 @@
  *
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 // import { FormattedMessage } from 'react-intl';
 // import messages from './messages';
@@ -21,7 +21,7 @@ import { Box, FormControl, Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   formWrapper: {
-    padding: theme.spacing(2),
+    
   },
   textField: {
     marginTop: theme.spacing(2),
@@ -43,24 +43,44 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.main,
   },
   buttonWrapper: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
+  formError: {
+    marginBottom: theme.spacing(2),
+    color: 'red',
+  }
 }));
 
-async function signUp({ email, password }) {
-  try {
-    await Auth.signUp(email, password);
-    console.log('sign up success!');
-  } catch (err) {
-    console.log('error signing up..', err);
-  }
-}
-
 export default function SignUp() {
+
   const classes = useStyles();
+
+  const [signupErrors, setSignupErrors] = useState(null);
+  
+  async function signUp({ email, password }) {
+    try {
+      await Auth.signUp(email, password);
+      console.log('sign up success!');
+    } catch (err) {
+      console.log('error signing up..', err);
+      setSignupErrors(err);
+    }
+  }
+
+  function resetForm() {
+    setSignupErrors(null);
+  }
 
   return (
     <Box className={classes.formWrapper}>
+      
+      {signupErrors != null && (
+        <div className={classes.formError}>
+          {signupErrors.message}
+        </div>
+      )}
+      
       <Formik
         initialValues={{
           email: '',
@@ -147,7 +167,7 @@ export default function SignUp() {
               >
                 Register
               </Button>
-              <Button className={classes.button} type="reset">
+              <Button onClick={resetForm} className={classes.button} type="reset">
                 Clear
               </Button>
             </Box>

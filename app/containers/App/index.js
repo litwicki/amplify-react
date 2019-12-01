@@ -64,6 +64,7 @@ const initialUserState = { user: null, loading: true };
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    paddingTop: theme.spacing(40)
   },
   app: {
     padding: theme.spacing(2),
@@ -84,11 +85,10 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'right',
   },
   authFormWrapper: {
-    maxWidth: 600,
-    marginTop: 200,
+    padding: theme.spacing(3),
+    width: 500,
     marginLeft: 'auto',
-    marginRight: 'auto',
-    padding: theme.spacing(2),
+    marginRight: 'auto'
   },
 }));
 
