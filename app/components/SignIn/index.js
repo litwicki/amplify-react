@@ -20,12 +20,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
  * MaterialUI
  */
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, FormControl, Button, Grid } from '@material-ui/core';
+import { Box, FormControl, Button, Divider } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
-  formWrapper: {
-   
-  },
+  formWrapper: {},
   textField: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(3),
@@ -41,6 +39,10 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     marginRight: theme.spacing(2),
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
   signupLink: {
     color: theme.palette.primary.main,
@@ -90,42 +92,54 @@ export default function SignIn(props) {
         }}
       >
         {({ errors, touched }) => (
-          <Form>
-            <FormControl
-              fullWidth
-              variant="filled"
-              className={classes.formControl}
+          <>
+            <Button
+              className={classes.googleLogin}
+              onClick={() => Auth.federatedSignIn({ provider: 'Google' })}
+              variant="outlined"
             >
-              <Field
-                component={TextField}
-                label="Email (username)"
-                variant="outlined"
-                name="email"
-                type="text"
-                className={`${classes.textField}form-control${
-                  errors.email && touched.email ? ' is-invalid' : ''
-                }`}
+              <FontAwesomeIcon
+                className={classes.icon}
+                icon={['fab', 'google']}
               />
-            </FormControl>
-            <FormControl
-              fullWidth
-              variant="filled"
-              className={classes.formControl}
-            >
-              <Field
-                component={TextField}
-                label="Password"
-                variant="outlined"
-                name="password"
-                type="password"
-                className={`${classes.textField}form-control${
-                  errors.password && touched.password ? ' is-invalid' : ''
-                }`}
-              />
-            </FormControl>
+              <div className={classes.btnText}>Login With Google</div>
+            </Button>
+            <Divider />
+            <Form>
+              <FormControl
+                fullWidth
+                variant="filled"
+                className={classes.formControl}
+              >
+                <Field
+                  component={TextField}
+                  label="Email (username)"
+                  variant="outlined"
+                  name="email"
+                  type="text"
+                  className={`${classes.textField}form-control${
+                    errors.email && touched.email ? ' is-invalid' : ''
+                  }`}
+                />
+              </FormControl>
+              <FormControl
+                fullWidth
+                variant="filled"
+                className={classes.formControl}
+              >
+                <Field
+                  component={TextField}
+                  label="Password"
+                  variant="outlined"
+                  name="password"
+                  type="password"
+                  className={`${classes.textField}form-control${
+                    errors.password && touched.password ? ' is-invalid' : ''
+                  }`}
+                />
+              </FormControl>
 
-            <Grid container size={12} className={classes.buttonWrapper}>
-              <Grid item xs={7}>
+              <div className={classes.buttonGroup}>
                 <Button
                   className={classes.button}
                   variant="contained"
@@ -137,22 +151,9 @@ export default function SignIn(props) {
                 <Button className={classes.button} type="reset">
                   Clear
                 </Button>
-              </Grid>
-              <Grid item xs={5}>
-                <Button
-                  className={classes.googleLogin}
-                  onClick={() => Auth.federatedSignIn({ provider: 'Google' })}
-                  variant="outlined"
-                >
-                  <FontAwesomeIcon
-                    className={classes.icon}
-                    icon={['fab', 'google']}
-                  />
-                  <div className={classes.btnText}>Login With Google</div>
-                </Button>
-              </Grid>
-            </Grid>
-          </Form>
+              </div>
+            </Form>
+          </>
         )}
       </Formik>
     </Box>

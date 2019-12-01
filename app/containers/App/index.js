@@ -64,7 +64,9 @@ const initialUserState = { user: null, loading: true };
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    paddingTop: theme.spacing(40)
+  },
+  unAuthRoot: {
+    paddingTop: theme.spacing(40),
   },
   app: {
     padding: theme.spacing(2),
@@ -86,9 +88,9 @@ const useStyles = makeStyles(theme => ({
   },
   authFormWrapper: {
     padding: theme.spacing(3),
-    width: 500,
+    width: 600,
     marginLeft: 'auto',
-    marginRight: 'auto'
+    marginRight: 'auto',
   },
 }));
 
@@ -157,7 +159,7 @@ function App(props) {
       <GlobalStyle />
       <div className={classes.root}>
         {!userState.user && !userState.loading && (
-          <Container>
+          <Container className={classes.unAuthRoot}>
             <Helmet>
               <title>Amplify | Sign In</title>
               <meta name="description" content="Amplify Web App" />
