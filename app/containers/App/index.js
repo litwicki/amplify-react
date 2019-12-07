@@ -8,7 +8,7 @@
  */
 import React, { useReducer, useEffect, useState } from 'react';
 
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { createStructuredSelector } from 'reselect';
@@ -54,6 +54,8 @@ import Router from '../../components/Router';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
 import { APP_HOSTNAME } from './constants';
+import { CHECK_USER_ACTION } from './constants';
+import { SET_USER_ACTION } from './constants';
 
 const Link = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
@@ -95,6 +97,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function App(props) {
+  
   console.log('container.App', props);
 
   function signOut() {
@@ -137,7 +140,7 @@ function App(props) {
       switch (payload.event) {
         case 'signIn':
           console.log('Hub.listen.auth.signIn', payload);
-          setImmediate(() => dispatch({ type: 'setUser', user: payload.data }));
+          setImmediate(() => dispatch({ type: SET_USER_ACTION, user: payload.data }));
           setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
           break;
         case 'signOut':
@@ -248,12 +251,12 @@ function App(props) {
   );
 }
 
-// App.propTypes = {
-//   dispatch: PropTypes.func.isRequired,
-// };
+App.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = createStructuredSelector({
-  user: makeSelectApp(),
+  app: makeSelectApp()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -270,7 +273,7 @@ const withConnect = connect(
 async function checkUser(dispatch) {
   try {
     const user = await Auth.currentAuthenticatedUser();
-    dispatch({ type: 'setUser', user });
+    dispatch({ type: CHECK_USER_ACTION, user });
   } catch (err) {
     console.log('checkUser error: ', err);
     dispatch({ type: 'loaded' });

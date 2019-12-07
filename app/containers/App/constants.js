@@ -4,5 +4,7 @@
  *
  */
 
-export const DEFAULT_ACTION = 'app/App/DEFAULT_ACTION';
+export const DEFAULT_ACTION = 'DEFAULT_ACTION';
+export const CHECK_USER_ACTION = 'CHECK_USER_ACTION';
+export const SET_USER_ACTION = 'SET_USER_ACTION';
 export const APP_HOSTNAME = 'http://localhost:3000/';
