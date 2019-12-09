@@ -61,8 +61,6 @@ const Link = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
 ));
 
-const initialUserState = { user: null, loading: true };
-
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -97,7 +95,31 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function App(props) {
-  
+
+  useEffect(() => {
+    // set listener for auth events
+    Hub.listen('auth', data => {
+      const { payload } = data;
+      switch (payload.event) {
+        case 'signIn':
+          console.log('Hub.listen.auth.signIn', payload);
+          setImmediate(() => dispatch({ type: SET_USER_ACTION, user: payload.data }));
+          setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
+          break;
+        case 'signOut':
+          console.log('Hub.listen.auth.signOut', payload);
+          window.location.href = '/';
+          break;
+        default:
+          break;
+      }
+    });
+    // // we check for the current user unless there is a redirect to ?signedIn=true
+    // if (!window.location.search.includes('?signedin=true')) {
+    //   checkUser(dispatch);
+    // }
+  }, []);
+
   console.log('container.App', props);
 
   function signOut() {
@@ -111,8 +133,9 @@ function App(props) {
   useInjectReducer({ key: 'app', reducer });
   useInjectSaga({ key: 'app', saga });
 
-  const [userState, dispatch] = useReducer(reducer, initialUserState);
   const classes = useStyles();
+  const { userState, dispatch } = props;
+  console.log('userState', userState);
   const [anchorEl, setAnchorEl] = useState(null);
   const [authFormType, setAuthFormType] = useState('signIn');
 
@@ -131,31 +154,6 @@ function App(props) {
       setAuthFormType('signIn');
     }
   }
-
-  useEffect(() => {
-    // set listener for auth events
-    Hub.listen('auth', data => {
-      const { payload } = data;
-
-      switch (payload.event) {
-        case 'signIn':
-          console.log('Hub.listen.auth.signIn', payload);
-          setImmediate(() => dispatch({ type: SET_USER_ACTION, user: payload.data }));
-          setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
-          break;
-        case 'signOut':
-          console.log('Hub.listen.auth.signOut', payload);
-          window.location.href = '/';
-          break;
-        default:
-          break;
-      }
-    });
-    // we check for the current user unless there is a redirect to ?signedIn=true
-    if (!window.location.search.includes('?signedin=true')) {
-      checkUser(dispatch);
-    }
-  }, []);
 
   return (
     <>
@@ -256,7 +254,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  app: makeSelectApp()
+  userState: makeSelectApp()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -270,14 +268,14 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-async function checkUser(dispatch) {
-  try {
-    const user = await Auth.currentAuthenticatedUser();
-    dispatch({ type: CHECK_USER_ACTION, user });
-  } catch (err) {
-    console.log('checkUser error: ', err);
-    dispatch({ type: 'loaded' });
-  }
-}
+// async function checkUser(dispatch) {
+//   try {
+//     const user = await Auth.currentAuthenticatedUser();
+//     dispatch({ type: CHECK_USER_ACTION, user });
+//   } catch (err) {
+//     console.log('checkUser error: ', err);
+//     dispatch({ type: 'loaded' });
+//   }
+// }
 
 export default compose(withConnect)(withRouter(App));

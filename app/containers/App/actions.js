@@ -4,9 +4,7 @@
  *
  */
 
-import { DEFAULT_ACTION } from './constants';
-import { CHECK_USER_ACTION } from './constants';
-import { SET_USER_ACTION } from './constants';
+import { DEFAULT_ACTION, LOADED_USER_ACTION, CHECK_USER_ACTION, SET_USER_ACTION } from './constants';
 
 export function defaultAction() {
   return {
@@ -23,5 +21,12 @@ export function checkUserAction() {
 export function setUserAction() {
   return {
     type: SET_USER_ACTION,
+  };
+}
+
+
+export function loadedUserAction() {
+  return {
+    type: LOADED_USER_ACTION,
   };
 }

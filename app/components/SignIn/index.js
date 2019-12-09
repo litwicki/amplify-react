@@ -59,8 +59,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignIn(props) {
-  console.log(props);
-
   const classes = useStyles();
 
   async function signIn({ email, password }) {
