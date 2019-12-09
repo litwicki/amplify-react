@@ -1,0 +1,12 @@
+{
+  "short_name": "Amplify",
+  "name": "AWS Amplify Web App",
+  "icons": [{
+    "src": "icon.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  }],
+  "start_url": "/?utm_source=home",
+  "background_color": "#f9f9f9",
+  "theme_color": "#f9f9f9"
+}
