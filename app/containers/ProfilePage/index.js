@@ -4,54 +4,44 @@
  *
  */
 
-import React, { useState } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import React from 'react';
 
-// import { FormattedMessage } from 'react-intl';
-// import messages from './messages';
+import PropTypes from 'prop-types';
+
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { compose } from 'redux';
+
+import { useInjectSaga } from 'utils/injectSaga';
+import { useInjectReducer } from 'utils/injectReducer';
+
+import { Link } from 'react-router-dom';
 
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-import { Auth } from 'aws-amplify';
 import { TextField } from 'formik-material-ui';
 
 /**
  * MaterialUI
  */
-import { makeStyles } from '@material-ui/core/styles';
 import { Box, FormControl, Button, Divider, Grid, Avatar } from '@material-ui/core';
-import { setUseProxies } from 'immer';
-
-const useStyles = makeStyles(theme => ({
-  formWrapper: {
-    flexGrow: 1,
-  },
-  textField: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(3),
-    paddingBottom: theme.spacing(2),
-  },
-  formControl: {
-    marginTop: theme.spacing(2),
-    paddingTop: theme.spacing(1),
-  },
-  divider: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-  },
-  button: {
-    marginRight: theme.spacing(2),
-  },
-  buttonWrapper: {
-    marginTop: theme.spacing(4),
-  }
-}));
+import makeSelectProfilePage from './selectors';
+import reducer from './reducer';
+import saga from './saga';
+import { FormattedMessage } from 'react-intl';
+import messages from './messages';
+import useStyles from './styles';
+import makeSelectApp from '../App/selectors';
 
 const ProfilePage = (props) => {
 
   const classes = useStyles();
+  const user = props.userState.user;
 
-  console.log(props);
+  useInjectReducer({ key: 'profile', reducer });
+  useInjectSaga({ key: 'profile', saga });
+
+  console.log('container.Profile', props);
 
   const change = (name, e) => {
     e.persist();
@@ -63,8 +53,7 @@ const ProfilePage = (props) => {
     <Box className={classes.formWrapper}>
       <Formik
         initialValues={{
-          given_name: '',
-          password: '',
+          given_name: user.attributes.given_name,
         }}
         validationSchema={Yup.object().shape({
           given_name: Yup.string()
@@ -76,7 +65,16 @@ const ProfilePage = (props) => {
         render={({ errors, touched }) => (
           <Grid container spacing={3}>
             <Grid item xs={2} className={classes.socialLogin}>
-
+            <Avatar
+              alt={
+                user.signInUserSession.idToken.given_name
+              }
+              src={
+                user.signInUserSession.idToken.payload
+                  .picture
+              }
+              className={classes.avatar}
+            />
             </Grid>
             <Grid item xs={3}>
               <Form className={classes.amplifyLogin}>
@@ -86,6 +84,7 @@ const ProfilePage = (props) => {
                   className={classes.formControl}
                 >
                   <Field
+                    onChange={change}
                     component={TextField}
                     label="Given Name"
                     variant="outlined"
@@ -93,22 +92,6 @@ const ProfilePage = (props) => {
                     type="text"
                     className={`${classes.textField}form-control${
                       errors.given_name && touched.given_name ? ' is-invalid' : ''
-                    }`}
-                  />
-                </FormControl>
-                <FormControl
-                  fullWidth
-                  variant="filled"
-                  className={classes.formControl}
-                >
-                  <Field
-                    component={TextField}
-                    label="Password"
-                    variant="outlined"
-                    name="password"
-                    type="password"
-                    className={`${classes.textField}form-control${
-                      errors.password && touched.password ? ' is-invalid' : ''
                     }`}
                   />
                 </FormControl>
@@ -120,21 +103,13 @@ const ProfilePage = (props) => {
                     color="primary"
                     type="submit"
                   >
-                    Sign In
+                    Save
                   </Button>
                   <Button className={classes.button} type="reset">
                     Clear
                   </Button>
                 </Box>
 
-                <Divider className={classes.divider} />
-
-                <p>
-                  Need an account?{' '}
-                  <Link className={classes.signupLink} to="/auth/signup">
-                    Sign Up
-                  </Link>
-                </p>
               </Form>
             </Grid>
           </Grid>
@@ -144,4 +119,26 @@ const ProfilePage = (props) => {
   );
 }
 
-export default ProfilePage;
+
+ProfilePage.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = createStructuredSelector({
+  profile: makeSelectProfilePage(),
+  userState: makeSelectApp(),
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+export default compose(withConnect)(ProfilePage);
+

@@ -40,23 +40,22 @@ import {
   Typography,
   Button,
   Paper,
-  Avatar,
   Menu,
   MenuItem,
   Divider,
   Container,
+  Avatar
 } from '@material-ui/core';
 
 /**
  * Our stuff
  */
+import { CHECK_USER_ACTION, SET_USER_ACTION, APP_HOSTNAME } from './constants';
 import GlobalStyle from '../../global-styles';
 import Router from '../../components/Router';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
-import { APP_HOSTNAME } from './constants';
-import { CHECK_USER_ACTION } from './constants';
-import { SET_USER_ACTION } from './constants';
+// import UserAvatar from '../../components/UserAvatar';
 
 const Link = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
