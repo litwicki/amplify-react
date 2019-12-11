@@ -44,13 +44,18 @@ import {
   MenuItem,
   Divider,
   Container,
-  Avatar
+  Avatar,
 } from '@material-ui/core';
 
 /**
  * Our stuff
  */
-import { CHECK_USER_ACTION, SET_USER_ACTION, APP_HOSTNAME } from './constants';
+import {
+  CHECK_USER_ACTION,
+  SET_USER_ACTION,
+  APP_HOSTNAME,
+  SIGN_OUT_USER_ACTION,
+} from './constants';
 import GlobalStyle from '../../global-styles';
 import Router from '../../components/Router';
 import SignIn from '../../components/SignIn';
@@ -62,7 +67,6 @@ const Link = React.forwardRef((props, ref) => (
 ));
 
 function App(props) {
-
   useEffect(() => {
     // set listener for auth events
     Hub.listen('auth', data => {
@@ -70,12 +74,16 @@ function App(props) {
       switch (payload.event) {
         case 'signIn':
           console.log('Hub.listen.auth.signIn', payload);
-          setImmediate(() => dispatch({ type: SET_USER_ACTION, user: payload.data }));
+          setImmediate(() =>
+            dispatch({ type: SET_USER_ACTION, user: payload.data }),
+          );
           setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
           break;
         case 'signOut':
           console.log('Hub.listen.auth.signOut', payload);
-          setImmediate(() => dispatch({ type: SIGNOUT_USER_ACTION, user: payload.data }));
+          setImmediate(() =>
+            dispatch({ type: SIGN_OUT_USER_ACTION, user: payload.data }),
+          );
           setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
           break;
         default:
@@ -125,9 +133,7 @@ function App(props) {
 
   return (
     <>
-      <Helmet>
-        
-      </Helmet>
+      <Helmet />
       <GlobalStyle />
       <div className={classes.root}>
         {!userState.user && !userState.loading && (
@@ -138,7 +144,7 @@ function App(props) {
                   <SignIn props={props} />
                   <Divider />
                   <p>
-                    <FormattedMessage {...messages.signUpMessage} />{ " " }
+                    <FormattedMessage {...messages.signUpMessage} />{' '}
                     <Button onClick={toggleForm}>
                       <FormattedMessage {...messages.signUp} />
                     </Button>
@@ -150,7 +156,7 @@ function App(props) {
                   <SignUp props={props} />
                   <Divider />
                   <p>
-                    <FormattedMessage {...messages.signInMessage} />{ " " }
+                    <FormattedMessage {...messages.signInMessage} />{' '}
                     <Button onClick={toggleForm}>
                       <FormattedMessage {...messages.signIn} />
                     </Button>
@@ -171,19 +177,16 @@ function App(props) {
                     to="/"
                     className={classes.title}
                   >
-                  <FormattedMessage {...messages.appName} />
+                    <FormattedMessage {...messages.appName} />
                   </Typography>
                   <div className={classes.userToolbar}>
                     <Avatar
                       aria-controls="simple-menu"
                       aria-haspopup="true"
                       onClick={handleClick}
-                      alt={
-                        userState.user.signInUserSession.idToken.given_name
-                      }
+                      alt={userState.user.signInUserSession.idToken.given_name}
                       src={
-                        userState.user.signInUserSession.idToken.payload
-                          .picture
+                        userState.user.signInUserSession.idToken.payload.picture
                       }
                       className={classes.menuAvatar}
                     />
@@ -221,7 +224,7 @@ App.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  userState: makeSelectApp()
+  userState: makeSelectApp(),
 });
 
 function mapDispatchToProps(dispatch) {

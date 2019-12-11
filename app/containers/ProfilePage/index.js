@@ -24,7 +24,14 @@ import { TextField } from 'formik-material-ui';
 /**
  * MaterialUI
  */
-import { Box, FormControl, Button, Divider, Grid, Avatar } from '@material-ui/core';
+import {
+  Box,
+  FormControl,
+  Button,
+  Divider,
+  Grid,
+  Avatar,
+} from '@material-ui/core';
 import makeSelectProfilePage from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -33,8 +40,7 @@ import messages from './messages';
 import useStyles from './styles';
 import makeSelectApp from '../App/selectors';
 
-const ProfilePage = (props) => {
-
+const ProfilePage = props => {
   const classes = useStyles();
   const user = props.userState.user;
 
@@ -53,11 +59,16 @@ const ProfilePage = (props) => {
     <Box className={classes.formWrapper}>
       <Formik
         initialValues={{
+          email: user.attributes.email,
           given_name: user.attributes.given_name,
+          family_name: user.attributes.family_name,
         }}
         validationSchema={Yup.object().shape({
-          given_name: Yup.string()
-            .required('Email is required'),
+          email: Yup.string()
+            .email('Please enter a valid email address.')
+            .required('Email address is required.'),
+          given_name: Yup.string().required('Given (first) name is required.'),
+          family_name: Yup.string().required('Family (last) name is required.'),
         })}
         onSubmit={fields => {
           console.log('hello world');
@@ -65,19 +76,38 @@ const ProfilePage = (props) => {
         render={({ errors, touched }) => (
           <Grid container spacing={3}>
             <Grid item xs={2} className={classes.socialLogin}>
-            <Avatar
-              alt={
-                user.signInUserSession.idToken.given_name
-              }
-              src={
-                user.signInUserSession.idToken.payload
-                  .picture
-              }
-              className={classes.avatar}
-            />
+              <Avatar
+                alt={user.signInUserSession.idToken.given_name}
+                src={user.signInUserSession.idToken.payload.picture}
+                className={classes.avatar}
+              />
             </Grid>
             <Grid item xs={3}>
               <Form className={classes.amplifyLogin}>
+                <FormControl
+                  fullWidth
+                  variant="filled"
+                  className={classes.formControl}
+                >
+                  <Field
+                    onChange={change}
+                    component={TextField}
+                    label="Email address"
+                    variant="outlined"
+                    name="email"
+                    type="text"
+                    className={`${classes.textField}form-control${
+                      errors.email && touched.email ? ' is-invalid' : ''
+                    }`}
+                  />
+                </FormControl>
+
+                {user.attributes.email_verified && (
+                  <Box className={classes.verifyEmail}>
+                    Please verify your email address.
+                  </Box>
+                )}
+
                 <FormControl
                   fullWidth
                   variant="filled"
@@ -91,7 +121,28 @@ const ProfilePage = (props) => {
                     name="given_name"
                     type="text"
                     className={`${classes.textField}form-control${
-                      errors.given_name && touched.given_name ? ' is-invalid' : ''
+                      errors.given_name && touched.given_name
+                        ? ' is-invalid'
+                        : ''
+                    }`}
+                  />
+                </FormControl>
+                <FormControl
+                  fullWidth
+                  variant="filled"
+                  className={classes.formControl}
+                >
+                  <Field
+                    onChange={change}
+                    component={TextField}
+                    label="Family Name"
+                    variant="outlined"
+                    name="family_name"
+                    type="text"
+                    className={`${classes.textField}form-control${
+                      errors.family_name && touched.family_name
+                        ? ' is-invalid'
+                        : ''
                     }`}
                   />
                 </FormControl>
@@ -109,7 +160,6 @@ const ProfilePage = (props) => {
                     Clear
                   </Button>
                 </Box>
-
               </Form>
             </Grid>
           </Grid>
@@ -117,8 +167,7 @@ const ProfilePage = (props) => {
       />
     </Box>
   );
-}
-
+};
 
 ProfilePage.propTypes = {
   dispatch: PropTypes.func.isRequired,
@@ -141,4 +190,3 @@ const withConnect = connect(
 );
 
 export default compose(withConnect)(ProfilePage);
-

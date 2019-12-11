@@ -3,4 +3,5 @@
  * DO NOT STORE KEYS OF ANY KIND HERE, ONLY REUSABLE DUMB VARS!!!
  */
 export const DEBUG = true;
+export const APP_NAME = 'LITWICKI';
 export const APP_HOSTNAME = 'http://localhost:3000/';
