@@ -60,7 +60,6 @@ import GlobalStyle from '../../global-styles';
 import Router from '../../components/Router';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
-// import UserAvatar from '../../components/UserAvatar';
 
 const Link = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
@@ -180,15 +179,15 @@ function App(props) {
                     <FormattedMessage {...messages.appName} />
                   </Typography>
                   <div className={classes.userToolbar}>
-                    <Avatar
+                    <Avatar 
                       aria-controls="simple-menu"
                       aria-haspopup="true"
                       onClick={handleClick}
+                      className={classes.menuAvatar}
                       alt={userState.user.signInUserSession.idToken.given_name}
                       src={
                         userState.user.signInUserSession.idToken.payload.picture
                       }
-                      className={classes.menuAvatar}
                     />
                     <Menu
                       id="simple-menu"
