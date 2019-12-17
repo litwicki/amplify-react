@@ -45,6 +45,7 @@ import {
   Divider,
   Container,
   Avatar,
+  CircularProgress
 } from '@material-ui/core';
 
 /**
@@ -55,6 +56,7 @@ import {
   SET_USER_ACTION,
   APP_HOSTNAME,
   SIGN_OUT_USER_ACTION,
+  LOADING_USER_ACTION,
 } from './constants';
 import GlobalStyle from '../../global-styles';
 import Router from '../../components/Router';
@@ -72,9 +74,10 @@ function App(props) {
       const { payload } = data;
       switch (payload.event) {
         case 'signIn':
+          dispatch({ type: LOADING_USER_ACTION });
           console.log('Hub.listen.auth.signIn', payload);
           setImmediate(() =>
-            dispatch({ type: SET_USER_ACTION, user: payload.data }),
+            dispatch({ type: SET_USER_ACTION, user: payload.data })
           );
           setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
           break;
@@ -91,8 +94,10 @@ function App(props) {
     });
     // we check for the current user unless there is a redirect to ?signedIn=true
     if (!window.location.search.includes('?signedin=true')) {
+      dispatch({ type: LOADING_USER_ACTION });
       checkUser(dispatch);
     }
+
   }, []);
 
   console.log('container.App', props);
@@ -128,6 +133,10 @@ function App(props) {
     } else {
       setAuthFormType('signIn');
     }
+  }
+
+  if(!userState.user && userState.loading) {
+    return (<CircularProgress color="secondary" />);
   }
 
   return (

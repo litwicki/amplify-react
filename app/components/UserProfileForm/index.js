@@ -5,13 +5,11 @@
  */
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+
 // import styled from 'styled-components';
-
-import { FormattedMessage } from 'react-intl';
-import messages from './messages';
-
-import { Link } from 'react-router-dom';
+// import { FormattedMessage } from 'react-intl';
+// import messages from './messages';
 
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
@@ -20,22 +18,17 @@ import { TextField } from 'formik-material-ui';
 /**
  * MaterialUI
  */
-import {
-  Box,
-  FormControl,
-  Button,
-  Divider,
-  Grid,
-  GridItem,
-  Avatar
-} from '@material-ui/core';
+import { Box, FormControl, Button, Grid, Avatar, CircularProgress } from '@material-ui/core';
 
 import useStyles from './styles';
+import { Auth } from 'aws-amplify';
 
 function UserProfileForm(props) {
 
-  //props.props?? wtf
-  const user = props.props.userState.user;
+  const { userState } = props;
+  
+  console.log('components.UserProfileForm', userState);
+  
   const classes = useStyles();
 
   const change = (name, e) => {
@@ -44,10 +37,21 @@ function UserProfileForm(props) {
     setFieldTouched(name, true, false);
   };
 
-  const userEmail = user.attributes.email ? user.attributes.email : null;
-  const givenName = user.attributes.given_name ? user.attributes.given_name : null;
-  const familyName = user.attributes.family_name ? user.attributes.family_name : null;
+  const user = userState.user;
+  const attributes = user.attributes;
+  const userEmail = attributes.email ? attributes.email : null;
+  const givenName = attributes.given_name
+    ? attributes.given_name
+    : null;
+  const familyName = attributes.family_name
+    ? attributes.family_name
+    : null;
   const username = user.username ? user.username : null;
+  
+  async function updateUserAttributes(user, fields) {
+    let newUser = await Auth.updateUserAttributes(user, fields);
+    return newUser;
+  }
 
   return (
     <Box className={classes.formWrapper}>
@@ -56,7 +60,7 @@ function UserProfileForm(props) {
           email: userEmail,
           given_name: givenName,
           family_name: familyName,
-          username: username
+          username,
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
@@ -64,9 +68,11 @@ function UserProfileForm(props) {
             .required('Email address is required.'),
           given_name: Yup.string().required('Given (first) name is required.'),
           family_name: Yup.string().required('Family (last) name is required.'),
+          username: Yup.string().required('Username is required.'),
         })}
         onSubmit={fields => {
-          console.log('hello world');
+          newUser = updateUserAttributes(user, fields);
+          console.log('Updating user attributes', newUser);
         }}
         render={({ errors, touched }) => (
           <Grid container spacing={3}>
@@ -122,7 +128,7 @@ function UserProfileForm(props) {
                 )}
 
                 <Grid container spacing={3}>
-                  <Grid item xs={6} spacing={3}>
+                  <Grid item xs={6}>
                     <FormControl
                       fullWidth
                       variant="filled"
@@ -143,7 +149,7 @@ function UserProfileForm(props) {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={6} spacing={3}>
+                  <Grid item xs={6}>
                     <FormControl
                       fullWidth
                       variant="filled"
@@ -185,6 +191,8 @@ function UserProfileForm(props) {
   );
 }
 
-UserProfileForm.propTypes = {};
+UserProfileForm.propTypes = {
+  userState: PropTypes.object.isRequired
+};
 
 export default UserProfileForm;

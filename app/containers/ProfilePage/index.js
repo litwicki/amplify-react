@@ -32,7 +32,7 @@ const ProfilePage = props => {
   console.log('container.Profile', props);
 
   return (
-    <UserProfileForm props={props} />
+    <UserProfileForm {...props} />
   );
 };
 

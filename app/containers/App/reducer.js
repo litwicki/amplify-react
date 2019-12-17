@@ -4,7 +4,7 @@
  *
  */
 import produce from 'immer';
-import { DEFAULT_ACTION, SET_USER_ACTION, CHECK_USER_ACTION, LOADED_USER_ACTION, SIGN_OUT_USER_ACTION } from './constants';
+import { DEFAULT_ACTION, SET_USER_ACTION, CHECK_USER_ACTION, LOADED_USER_ACTION, SIGN_OUT_USER_ACTION, LOADING_USER_ACTION } from './constants';
 
 export const initialState = { user: null, loading: false };
 
@@ -21,10 +21,11 @@ const appReducer = (state = initialState, action) =>
         return newState;
       case SIGN_OUT_USER_ACTION:
         return { ...state, user: null, loading: false };
+      case LOADING_USER_ACTION:
+        return { ...state, loading: true };
       case LOADED_USER_ACTION:
-        return { ...state, loading: false };
       case DEFAULT_ACTION:
-        break;
+        return { ...state };
     }
   });
 
