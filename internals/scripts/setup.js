@@ -74,6 +74,13 @@ function checkNpmVersion(minimalNpmVersion) {
  */
 function installPackages() {
   return new Promise((resolve, reject) => {
+
+    process.stdout.write(
+      '\nInstalling AWS Amplify CLI...',
+    );
+
+    exec('npm install -g @aws-amplify/cli');
+
     process.stdout.write(
       '\nInstalling dependencies... (This might take a while)',
     );
