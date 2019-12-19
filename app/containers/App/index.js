@@ -45,6 +45,7 @@ import {
   Divider,
   Container,
   Avatar,
+  CircularProgress
 } from '@material-ui/core';
 
 /**
@@ -55,12 +56,12 @@ import {
   SET_USER_ACTION,
   APP_HOSTNAME,
   SIGN_OUT_USER_ACTION,
+  LOADING_USER_ACTION,
 } from './constants';
 import GlobalStyle from '../../global-styles';
 import Router from '../../components/Router';
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
-// import UserAvatar from '../../components/UserAvatar';
 
 const Link = React.forwardRef((props, ref) => (
   <RouterLink innerRef={ref} {...props} />
@@ -73,9 +74,10 @@ function App(props) {
       const { payload } = data;
       switch (payload.event) {
         case 'signIn':
+          dispatch({ type: LOADING_USER_ACTION });
           console.log('Hub.listen.auth.signIn', payload);
           setImmediate(() =>
-            dispatch({ type: SET_USER_ACTION, user: payload.data }),
+            dispatch({ type: SET_USER_ACTION, user: payload.data })
           );
           setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
           break;
@@ -92,8 +94,10 @@ function App(props) {
     });
     // we check for the current user unless there is a redirect to ?signedIn=true
     if (!window.location.search.includes('?signedin=true')) {
+      dispatch({ type: LOADING_USER_ACTION });
       checkUser(dispatch);
     }
+
   }, []);
 
   console.log('container.App', props);
@@ -129,6 +133,10 @@ function App(props) {
     } else {
       setAuthFormType('signIn');
     }
+  }
+
+  if(!userState.user && userState.loading) {
+    return (<CircularProgress color="secondary" />);
   }
 
   return (
@@ -180,15 +188,15 @@ function App(props) {
                     <FormattedMessage {...messages.appName} />
                   </Typography>
                   <div className={classes.userToolbar}>
-                    <Avatar
+                    <Avatar 
                       aria-controls="simple-menu"
                       aria-haspopup="true"
                       onClick={handleClick}
+                      className={classes.menuAvatar}
                       alt={userState.user.signInUserSession.idToken.given_name}
                       src={
                         userState.user.signInUserSession.idToken.payload.picture
                       }
-                      className={classes.menuAvatar}
                     />
                     <Menu
                       id="simple-menu"
