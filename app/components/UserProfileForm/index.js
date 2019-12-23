@@ -18,17 +18,22 @@ import { TextField } from 'formik-material-ui';
 /**
  * MaterialUI
  */
-import { Box, FormControl, Button, Grid, Avatar, CircularProgress } from '@material-ui/core';
+import {
+  Box,
+  FormControl,
+  Button,
+  Grid,
+  Avatar,
+  CircularProgress,
+} from '@material-ui/core';
 
 import useStyles from './styles';
-import { Auth } from 'aws-amplify';
 
 function UserProfileForm(props) {
-
   const { userState } = props;
-  
-  console.log('components.UserProfileForm', userState);
-  
+  const { attributes } = userState.user;
+  console.log('userProfileForm.attributes', attributes);
+
   const classes = useStyles();
 
   const change = (name, e) => {
@@ -37,21 +42,14 @@ function UserProfileForm(props) {
     setFieldTouched(name, true, false);
   };
 
-  const user = userState.user;
-  const attributes = user.attributes;
-  const userEmail = attributes.email ? attributes.email : null;
-  const givenName = attributes.given_name
-    ? attributes.given_name
-    : null;
-  const familyName = attributes.family_name
-    ? attributes.family_name
-    : null;
-  const username = user.username ? user.username : null;
-  
-  async function updateUserAttributes(user, fields) {
-    let newUser = await Auth.updateUserAttributes(user, fields);
-    return newUser;
+  if (attributes === null) {
+    return <CircularProgress />;
   }
+
+  const userEmail = attributes.email ? attributes.email : null;
+  const givenName = attributes.given_name ? attributes.given_name : null;
+  const familyName = attributes.family_name ? attributes.family_name : null;
+  const username = userState.user.username ? userState.user.username : null;
 
   return (
     <Box className={classes.formWrapper}>
@@ -71,15 +69,14 @@ function UserProfileForm(props) {
           username: Yup.string().required('Username is required.'),
         })}
         onSubmit={fields => {
-          newUser = updateUserAttributes(user, fields);
-          console.log('Updating user attributes', newUser);
+          console.log('submitted user fields', fields);
         }}
         render={({ errors, touched }) => (
           <Grid container spacing={3}>
             <Grid item xs={2} className={classes.socialLogin}>
               <Avatar
-                alt={user.signInUserSession.idToken.given_name}
-                src={user.signInUserSession.idToken.payload.picture}
+                alt={userState.user.signInUserSession.idToken.given_name}
+                src={userState.user.signInUserSession.idToken.payload.picture}
                 className={classes.avatar}
               />
             </Grid>
@@ -121,7 +118,7 @@ function UserProfileForm(props) {
                   />
                 </FormControl>
 
-                {user.attributes.email_verified && (
+                {attributes.email_verified && (
                   <Box className={classes.verifyEmail}>
                     Please verify your email address.
                   </Box>
@@ -192,7 +189,7 @@ function UserProfileForm(props) {
 }
 
 UserProfileForm.propTypes = {
-  userState: PropTypes.object.isRequired
+  userState: PropTypes.object.isRequired,
 };
 
 export default UserProfileForm;

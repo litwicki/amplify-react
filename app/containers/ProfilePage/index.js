@@ -25,15 +25,12 @@ import makeSelectApp from '../App/selectors';
 import UserProfileForm from '../../components/UserProfileForm';
 
 const ProfilePage = props => {
-
   useInjectReducer({ key: 'profile', reducer });
   useInjectSaga({ key: 'profile', saga });
 
   console.log('container.Profile', props);
 
-  return (
-    <UserProfileForm {...props} />
-  );
+  return <UserProfileForm {...props} />;
 };
 
 ProfilePage.propTypes = {
@@ -41,8 +38,8 @@ ProfilePage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  profile: makeSelectProfilePage(),
   userState: makeSelectApp(),
+  profile: makeSelectProfilePage(),
 });
 
 function mapDispatchToProps(dispatch) {

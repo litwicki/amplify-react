@@ -24,16 +24,7 @@ import {
 } from 'react-router-dom';
 
 import { Hub, Auth } from 'aws-amplify';
-import makeSelectApp from './selectors';
-import reducer from './reducer';
-import saga from './saga';
 import { FormattedMessage } from 'react-intl';
-import messages from './messages';
-import useStyles from './styles';
-
-/**
- * MaterialUI
- */
 import {
   AppBar,
   Toolbar,
@@ -45,15 +36,23 @@ import {
   Divider,
   Container,
   Avatar,
-  CircularProgress
+  CircularProgress,
 } from '@material-ui/core';
+import makeSelectApp from './selectors';
+import reducer from './reducer';
+import saga from './saga';
+import messages from './messages';
+import useStyles from './styles';
+
+/**
+ * MaterialUI
+ */
 
 /**
  * Our stuff
  */
 import {
-  CHECK_USER_ACTION,
-  SET_USER_ACTION,
+  LOAD_USER_ACTION,
   APP_HOSTNAME,
   SIGN_OUT_USER_ACTION,
   LOADING_USER_ACTION,
@@ -76,9 +75,7 @@ function App(props) {
         case 'signIn':
           dispatch({ type: LOADING_USER_ACTION });
           console.log('Hub.listen.auth.signIn', payload);
-          setImmediate(() =>
-            dispatch({ type: SET_USER_ACTION, user: payload.data })
-          );
+          setImmediate(() => loadUser(dispatch));
           setImmediate(() => window.history.pushState({}, null, APP_HOSTNAME));
           break;
         case 'signOut':
@@ -95,9 +92,8 @@ function App(props) {
     // we check for the current user unless there is a redirect to ?signedIn=true
     if (!window.location.search.includes('?signedin=true')) {
       dispatch({ type: LOADING_USER_ACTION });
-      checkUser(dispatch);
+      loadUser(dispatch);
     }
-
   }, []);
 
   console.log('container.App', props);
@@ -135,8 +131,8 @@ function App(props) {
     }
   }
 
-  if(!userState.user && userState.loading) {
-    return (<CircularProgress color="secondary" />);
+  if (!userState.user && userState.loading) {
+    return <CircularProgress color="secondary" />;
   }
 
   return (
@@ -188,7 +184,7 @@ function App(props) {
                     <FormattedMessage {...messages.appName} />
                   </Typography>
                   <div className={classes.userToolbar}>
-                    <Avatar 
+                    <Avatar
                       aria-controls="simple-menu"
                       aria-haspopup="true"
                       onClick={handleClick}
@@ -229,6 +225,7 @@ function App(props) {
 
 App.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  userState: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -246,12 +243,12 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-async function checkUser(dispatch) {
+async function loadUser(dispatch) {
   try {
     const user = await Auth.currentAuthenticatedUser();
-    dispatch({ type: CHECK_USER_ACTION, user });
+    dispatch({ type: LOAD_USER_ACTION, user });
   } catch (err) {
-    console.log('checkUser error: ', err);
+    console.log('loadUser error: ', err);
   }
 }
 

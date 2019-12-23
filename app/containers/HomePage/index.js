@@ -17,6 +17,7 @@ import makeSelectHomePage from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
+import makeSelectApp from '../App/selectors';
 
 export function HomePage() {
   useInjectReducer({ key: 'homePage', reducer });
@@ -34,6 +35,7 @@ HomePage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
+  userState: makeSelectApp(),
   homePage: makeSelectHomePage(),
 });
 

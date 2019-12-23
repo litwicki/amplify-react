@@ -4,7 +4,13 @@
  *
  */
 
-import { DEFAULT_ACTION, LOADED_USER_ACTION, LOADING_USER_ACTION, CHECK_USER_ACTION, SET_USER_ACTION, SIGN_OUT_USER_ACTION } from './constants';
+import {
+  DEFAULT_ACTION,
+  LOADED_USER_ACTION,
+  LOADING_USER_ACTION,
+  LOAD_USER_ACTION,
+  SIGN_OUT_USER_ACTION,
+} from './constants';
 
 export function defaultAction() {
   return {
@@ -12,15 +18,9 @@ export function defaultAction() {
   };
 }
 
-export function checkUserAction() {
+export function loadUserAction() {
   return {
-    type: CHECK_USER_ACTION,
-  };
-}
-
-export function setUserAction() {
-  return {
-    type: SET_USER_ACTION,
+    type: LOAD_USER_ACTION,
   };
 }
 
