@@ -34,9 +34,8 @@ import {
   Menu,
   MenuItem,
   Divider,
-  Container,
+  Box,
   Avatar,
-  CircularProgress,
 } from '@material-ui/core';
 import makeSelectApp from './selectors';
 import reducer from './reducer';
@@ -131,17 +130,13 @@ function App(props) {
     }
   }
 
-  if (!userState.user && userState.loading) {
-    return <CircularProgress color="secondary" />;
-  }
-
   return (
     <>
       <Helmet />
       <GlobalStyle />
       <div className={classes.root}>
         {!userState.user && !userState.loading && (
-          <Container className={classes.unAuthRoot}>
+          <Box className={classes.unAuthRoot}>
             <Paper className={classes.authFormWrapper}>
               {authFormType === 'signIn' && (
                 <>
@@ -168,7 +163,7 @@ function App(props) {
                 </>
               )}
             </Paper>
-          </Container>
+          </Box>
         )}
         {userState.user && !userState.loading && (
           <>

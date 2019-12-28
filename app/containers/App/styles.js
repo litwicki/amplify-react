@@ -5,7 +5,15 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   unAuthRoot: {
-    paddingTop: theme.spacing(40),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
   app: {
     padding: theme.spacing(2),
@@ -28,8 +36,8 @@ const useStyles = makeStyles(theme => ({
   authFormWrapper: {
     padding: theme.spacing(3),
     width: 600,
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    resize: 'both',
+    overflow: 'auto',
   },
 }));
 
