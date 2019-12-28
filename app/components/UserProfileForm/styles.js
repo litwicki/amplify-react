@@ -28,6 +28,11 @@ const useStyles = makeStyles(theme => ({
     width: 250,
     height: 250,
   },
+  avatarWrapper: {
+    minWidth: 250,
+    width: 250,
+    marginRight: theme.spacing(5),
+  },
   verifyEmail: {
     color: theme.palette.error.dark,
     padding: theme.spacing(2),
