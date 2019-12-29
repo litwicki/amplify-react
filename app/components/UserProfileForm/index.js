@@ -16,17 +16,37 @@ import * as Yup from 'yup';
 import { TextField } from 'formik-material-ui';
 
 /**
- * Amplify
+ * MaterialUI
  */
 import { Box, FormControl, Button, Grid, Avatar } from '@material-ui/core';
+import { API, Auth } from 'aws-amplify';
+import useStyles from './styles';
+
+/**
+ * Amplify
+ */
 import { updateUserAttributes } from '../../utils/auth';
 import LoadingOverlay from '../LoadingOverlay';
 
-/**
- * MaterialUI
- */
+async function handleSubmit(user, fields) {
+  const apiName = 'assets';
+  const path = '/assets';
+  const params = {
+    body: {},
+    headers: {
+      Authorization: `Bearer ${(await Auth.currentSession())
+        .getAccessToken()
+        .getJwtToken()}`,
+    },
+  };
 
-import useStyles from './styles';
+  updateUserAttributes(user, fields).then(res => {
+    console.log(res);
+  });
+
+  return API.post(apiName, path, params);
+}
+
 function UserProfileForm(props) {
   const { userState } = props;
   const { attributes } = userState.user;
@@ -38,6 +58,8 @@ function UserProfileForm(props) {
   const givenName = attributes.given_name ? attributes.given_name : null;
   const familyName = attributes.family_name ? attributes.family_name : null;
   const username = userState.user.username ? userState.user.username : null;
+  const avatar = attributes.picture ? attributes.picture : null;
+  const avatarSrc = userState.user.signInUserSession.idToken.payload.picture;
 
   return (
     <Box className={classes.formWrapper}>
@@ -47,6 +69,7 @@ function UserProfileForm(props) {
           given_name: givenName,
           family_name: familyName,
           username,
+          avatar,
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
@@ -55,23 +78,35 @@ function UserProfileForm(props) {
           given_name: Yup.string().required('Given (first) name is required.'),
           family_name: Yup.string().required('Family (last) name is required.'),
           username: Yup.string().required('Username is required.'),
+          avatar: Yup.mixed(),
         })}
         onSubmit={(fields, { setSubmitting }) => {
-          updateUserAttributes(userState.user, fields).then(res => {
-            console.log(res);
-            setSubmitting(false);
-          });
+          console.log('fields', fields);
+          const { user } = userState;
+          handleSubmit(user, fields);
+          setSubmitting(false);
         }}
-        render={({ errors, touched, isSubmitting }) => (
+        render={({ errors, touched, isSubmitting, setFieldValue }) => (
           <>
             {isSubmitting && <LoadingOverlay />}
             <Grid container spacing={3}>
               <Grid item xs={2} className={classes.avatarWrapper}>
-                <Avatar
-                  alt={userState.user.signInUserSession.idToken.given_name}
-                  src={userState.user.signInUserSession.idToken.payload.picture}
-                  className={classes.avatar}
-                />
+                <Button component="label" className={classes.imageButton}>
+                  <Avatar
+                    alt={userState.user.signInUserSession.idToken.given_name}
+                    src={avatarSrc}
+                    className={classes.avatar}
+                  />
+                  <input
+                    name="avatar"
+                    type="file"
+                    accept="image/*"
+                    onChange={event => {
+                      setFieldValue('avatar', event.currentTarget.files[0]);
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                </Button>
               </Grid>
               <Grid item xs={4}>
                 <Form className={classes.amplifyLogin}>
