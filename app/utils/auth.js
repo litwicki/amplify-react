@@ -12,11 +12,16 @@ export async function updateUserAttributes(user, attributes) {
       family_name: attributes.family_name,
       given_name: attributes.given_name,
     });
-
-    // let result = await Auth.verifyCurrentUserAttributeSubmit('email', 'abc123');
-
     console.log(result);
   } catch (e) {
     console.log('ERROR: utils/updateUserAttributes', e);
   }
+
+  const params = {
+    bypassCache: true, // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+  };
+
+  Auth.currentAuthenticatedUser(params)
+    .then(data => data)
+    .catch(err => console.log(err));
 }

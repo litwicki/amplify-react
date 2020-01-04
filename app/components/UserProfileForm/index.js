@@ -7,6 +7,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { compose } from 'redux';
+
 // import styled from 'styled-components';
 // import { FormattedMessage } from 'react-intl';
 // import messages from './messages';
@@ -19,7 +23,6 @@ import { TextField } from 'formik-material-ui';
  * MaterialUI
  */
 import { Box, FormControl, Button, Grid, Avatar } from '@material-ui/core';
-import { API, Auth } from 'aws-amplify';
 import useStyles from './styles';
 
 /**
@@ -27,30 +30,17 @@ import useStyles from './styles';
  */
 import { updateUserAttributes } from '../../utils/auth';
 import LoadingOverlay from '../LoadingOverlay';
+import { LOAD_USER_ACTION } from '../../containers/App/constants';
+
+import makeSelectApp from '../../containers/App/selectors';
 
 async function handleSubmit(user, fields) {
-  const apiName = 'assets';
-  const path = '/assets';
-  const params = {
-    body: {},
-    headers: {
-      Authorization: `Bearer ${(await Auth.currentSession())
-        .getAccessToken()
-        .getJwtToken()}`,
-    },
-  };
-
-  updateUserAttributes(user, fields).then(res => {
-    console.log(res);
-  });
-
-  return API.post(apiName, path, params);
+  updateUserAttributes(user, fields).then(data => data);
 }
 
 function UserProfileForm(props) {
-  const { userState } = props;
+  const { userState, dispatch } = props;
   const { attributes } = userState.user;
-  console.log('userProfileForm.attributes', attributes);
 
   const classes = useStyles();
 
@@ -84,6 +74,7 @@ function UserProfileForm(props) {
           console.log('fields', fields);
           const { user } = userState;
           handleSubmit(user, fields);
+          dispatch({ type: LOAD_USER_ACTION, user });
           setSubmitting(false);
         }}
         render={({ errors, touched, isSubmitting, setFieldValue }) => (
@@ -215,7 +206,23 @@ function UserProfileForm(props) {
 }
 
 UserProfileForm.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   userState: PropTypes.object.isRequired,
 };
 
-export default UserProfileForm;
+const mapStateToProps = createStructuredSelector({
+  userState: makeSelectApp(),
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+export default compose(withConnect)(UserProfileForm);
