@@ -176,7 +176,7 @@ function App(props) {
                     to="/"
                     className={classes.title}
                   >
-                    <FormattedMessage {...messages.appName} />
+                    Amplify App
                   </Typography>
                   <div className={classes.userToolbar}>
                     <Avatar

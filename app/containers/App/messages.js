@@ -5,15 +5,10 @@
  */
 
 import { defineMessages } from 'react-intl';
-import { APP_NAME } from '../../constants';
 
 export const scope = 'app.containers.App';
 
 export default defineMessages({
-  appName: {
-    id: `${scope}.appName`,
-    defaultMessage: APP_NAME,
-  },
   description: {
     id: `${scope}.description`,
     defaultMessage: 'Amplify WebApp',

@@ -1,11 +1,7 @@
 {
-  "name": "react-boilerplate",
-  "version": "4.0.0",
-  "description": "A highly scalable, offline-first foundation with the best DX and a focus on performance and best practices",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/react-boilerplate/react-boilerplate.git"
-  },
+  "name": "litwicki-amplify-boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate Amplify application framework",
   "engines": {
     "npm": ">=5",
     "node": ">=8.15.1"
@@ -73,6 +69,7 @@
     "@material-ui/icons": "^4.5.1",
     "aws-amplify": "^1.2.4",
     "aws-amplify-react": "^2.5.4",
+    "aws-amplify-react-native": "^4.1.1",
     "chalk": "^2.4.2",
     "compression": "1.7.4",
     "connected-react-router": "6.4.0",

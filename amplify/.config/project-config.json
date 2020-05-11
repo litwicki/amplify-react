@@ -1,9 +1,9 @@
 {
-  "projectName": "amplify",
-  "version": "2.0",
+  "projectName": "recipes",
+  "version": "3.0",
   "frontend": "javascript",
   "javascript": {
-    "framework": "react",
+    "framework": "react-native",
     "config": {
       "SourceDir": "app",
       "DistributionDir": "build",
