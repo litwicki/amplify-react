@@ -1,15 +1,28 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-recipes-dev-235652-authRole",
-      "UnauthRoleArn": "arn:aws:iam::207996445507:role/amplify-recipes-dev-235652-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::207996445507:role/amplify-recipes-dev-235652-authRole",
+      "AuthRoleName": "amplify-recipes-dev-03018-authRole",
+      "UnauthRoleArn": "arn:aws:iam::207996445507:role/amplify-recipes-dev-03018-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::207996445507:role/amplify-recipes-dev-03018-authRole",
       "Region": "us-west-2",
-      "DeploymentBucketName": "amplify-recipes-dev-235652-deployment",
-      "UnauthRoleName": "amplify-recipes-dev-235652-unauthRole",
-      "StackName": "amplify-recipes-dev-235652",
-      "StackId": "arn:aws:cloudformation:us-west-2:207996445507:stack/amplify-recipes-dev-235652/9ca1b240-9354-11ea-bf31-0adc445e54d6",
-      "AmplifyAppId": "d2b7kphfkwdjp1"
+      "DeploymentBucketName": "amplify-recipes-dev-03018-deployment",
+      "UnauthRoleName": "amplify-recipes-dev-03018-unauthRole",
+      "StackName": "amplify-recipes-dev-03018",
+      "StackId": "arn:aws:cloudformation:us-west-2:207996445507:stack/amplify-recipes-dev-03018/44cb5490-9359-11ea-8d84-02d0bd2cd418",
+      "AmplifyAppId": "d2utoef6hw6ohm"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d2utoef6hw6ohm",
+          "type": "cicd"
+        }
+      },
+      "auth": {
+        "recipes074e53b2": {
+          "hostedUIProviderCreds": "[{\"ProviderName\":\"Facebook\",\"client_id\":\"1343541372520358\",\"client_secret\":\"b144f4426b1cbcc6ff14a6aee903ead6\"},{\"ProviderName\":\"Google\",\"client_id\":\"462455851570-0vqar7kgk39dh3103eiavehnpte55sjc.apps.googleusercontent.com\",\"client_secret\":\"d_LFatFT5nu3RPc3KAE0ea4v\"}]"
+        }
+      }
     }
   }
 }

@@ -53,6 +53,10 @@ const useStyles = makeStyles(theme => ({
   googleLogin: {
     marginBottom: theme.spacing(2),
   },
+  fbLogin: {
+    marginBottom: theme.spacing(2),
+    marginLeft: theme.spacing(2)
+  },
   btnText: {
     marginLeft: theme.spacing(1),
   },
@@ -102,6 +106,17 @@ export default function SignIn(props) {
               />
               <div className={classes.btnText}>Login With Google</div>
             </Button>
+            <Button
+              className={classes.fbLogin}
+              onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}
+              variant="outlined"
+            >
+              <FontAwesomeIcon
+                className={classes.icon}
+                icon={['fab', 'facebook']}
+              />
+              <div className={classes.btnText}>Login With Facebook</div>
+            </Button>
             <Divider />
             <Form>
               <FormControl
@@ -117,7 +132,7 @@ export default function SignIn(props) {
                   type="text"
                   className={`${classes.textField}form-control${
                     errors.email && touched.email ? ' is-invalid' : ''
-                  }`}
+                    }`}
                 />
               </FormControl>
               <FormControl
@@ -133,7 +148,7 @@ export default function SignIn(props) {
                   type="password"
                   className={`${classes.textField}form-control${
                     errors.password && touched.password ? ' is-invalid' : ''
-                  }`}
+                    }`}
                 />
               </FormControl>
 

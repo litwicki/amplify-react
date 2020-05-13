@@ -29,7 +29,6 @@ import '!file-loader?name=[name].[ext]!./images/favicon.ico';
 import 'file-loader?name=.htaccess!./.htaccess';
 /* eslint-enable import/no-unresolved, import/extensions */
 
-import Amplify from 'aws-amplify';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import configureStore from './configureStore';
@@ -38,8 +37,25 @@ import configureStore from './configureStore';
 import { translationMessages } from './i18n';
 
 import * as serviceWorker from './serviceWorker';
-import config from './aws-exports';
-Amplify.configure(config);
+import awsconfig from './aws-exports';
+
+import Amplify, { Auth } from 'aws-amplify';
+
+Amplify.configure({
+  Auth: {
+    identityPoolId: awsconfig.aws_cognito_identity_pool_id,
+    region: awsconfig.aws_project_region,
+    identityPoolRegion: awsconfig.aws_cognito_region,
+    userPoolId: awsconfig.aws_user_pools_id,
+    userPoolWebClientId: awsconfig.aws_user_pools_web_client_id,
+    mandatorySignIn: true,
+    oauth: awsconfig.oauth
+  }
+});
+
+const currentConfig = Auth.configure();
+console.log(currentConfig);
+
 library.add(fab);
 
 const theme = createMuiTheme({
